@@ -1,0 +1,276 @@
+.noticias-page {
+  min-height: 100vh;
+}
+
+/* Hero Section */
+.noticias-hero {
+  background-color: var(--yellow-bg);
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.noticias-hero h1 {
+  font-size: 3rem;
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+/* News Grid */
+.noticias-content {
+  padding: 5rem 2rem;
+  background-color: var(--white);
+}
+
+.noticias-grid-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.news-card-page {
+  background: var(--white);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #e5e5e5;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.news-card-page:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.news-image-page {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.news-image-page img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.news-card-page:hover .news-image-page img {
+  transform: scale(1.05);
+}
+
+.news-content-page {
+  padding: 1.5rem;
+}
+
+.news-date-page {
+  color: var(--text-gray);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.news-title-page {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+  line-height: 1.4;
+  min-height: 50px;
+}
+
+.news-btn-page {
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 0.6rem 1.5rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.news-btn-page:hover {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+/* CTA Section */
+.noticias-cta {
+  background-color: var(--gray-bg);
+  padding: 5rem 2rem;
+}
+
+.cta-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--white);
+  border-radius: 20px;
+  padding: 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 4rem;
+  align-items: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.cta-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cta-image img {
+  width: 100%;
+  height: auto;
+  max-width: 350px;
+}
+
+.cta-form-box h2 {
+  font-size: 1.6rem;
+  color: var(--text-dark);
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.cta-subtitle {
+  color: var(--text-gray);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.cta-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-field label {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.form-field input,
+.form-field textarea {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: var(--primary-color);
+}
+
+.form-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-checkbox {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.form-checkbox input[type="checkbox"] {
+  margin-top: 0.25rem;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+.form-checkbox label {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  line-height: 1.5;
+}
+
+.form-checkbox label small {
+  color: var(--text-gray);
+  font-size: 0.8rem;
+}
+
+.form-checkbox label a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.form-checkbox label a:hover {
+  text-decoration: underline;
+}
+
+.cta-submit-btn {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  padding: 0.875rem 2.5rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+.cta-submit-btn:hover {
+  background-color: #26BDAA;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+}
+
+@media (max-width: 968px) {
+  .cta-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .cta-image {
+    display: flex;
+    justify-content: center;
+  }
+
+  .cta-submit-btn {
+    align-self: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .noticias-hero h1 {
+    font-size: 2rem;
+  }
+
+  .noticias-grid-page {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-form {
+    flex-direction: column;
+  }
+
+  .cta-text h2 {
+    font-size: 1.5rem;
+  }
+}
