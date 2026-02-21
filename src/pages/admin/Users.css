@@ -1,0 +1,96 @@
+.users-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.users-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.users-search {
+  margin-bottom: 20px;
+}
+
+.users-search input {
+  padding: 8px 12px;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.users-table th,
+.users-table td {
+    color: black;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.users-table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  color: #555;
+}
+
+.users-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-badge.active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-badge.inactive {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.btn-edit,
+.btn-delete {
+  padding: 5px 10px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-edit {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.users-loading,
+.users-error {
+  padding: 20px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.users-error {
+  color: #dc3545;
+}
