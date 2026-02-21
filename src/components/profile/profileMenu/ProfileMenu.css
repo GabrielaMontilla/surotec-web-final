@@ -1,0 +1,26 @@
+.profile-menu {
+  background: white;
+  border-radius: 16px;
+  padding: 15px;
+  margin-top: 25px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.profile-menu-item {
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.profile-menu-item:hover {
+  background-color: #f3f4f6;
+}
+
+.profile-menu-item.active {
+  background-color: #e0e7ff;
+  color: #2563eb;
+  font-weight: 600;
+}
