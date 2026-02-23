@@ -28,7 +28,7 @@ const Home = () => {
 
   const partners = [
     { name: 'Globant', logo: '/partners/globant.png' },
-    { name: 'CESDE', logo: '/partners/cesde.png' },
+    { name: 'SENA', logo: '/partners/sena.png' },
     { name: 'Universidad EAFIT', logo: '/partners/eafit.png' },
     { name: 'Fomento', logo: '/partners/fomento.png' },
     { name: 'Comfama', logo: '/partners/comfama.png' },
@@ -113,7 +113,7 @@ const Home = () => {
         <div className="newsletter-container">
           <div className="newsletter-content">
             <div className="newsletter-logo">
-              <img src="/logo-2.png" alt="SUROTEC" />
+              <img src="/logo.png" alt="SUROTEC" />
               <h3>Transformamos el mundo por medio de la tecnología, la educación y la cultura</h3>
             </div>
 

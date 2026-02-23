@@ -28,7 +28,7 @@ const Noticias = () => {
       id: 8,
       date: '10/06/2025',
       title: 'Conversatorio en la Universidad Eafit con ...',
-      image: '/noticias-1.png'
+      image: '/noticias-4.png'
     },
   ];
 
