@@ -1,125 +1,163 @@
-Plataforma Web Surotec – Frontend
+# Plataforma Web Surotec – Frontend
 
-Este repositorio contiene el frontend de la Plataforma Web Surotec, desarrollado en React con JavaScript.
+Frontend desarrollado en **React + JavaScript** para la Plataforma Web Surotec.
 
-La aplicación incluye:
+Incluye una landing page pública y un sistema interno con autenticación y control de roles, conectado a un backend desarrollado en Java (Programación Orientada a Objetos) con base de datos MySQL.
 
-Landing page pública informativa
-Sistema interno con autenticación
-Dashboard para estudiantes
-Dashboard para administradores
-Integración con backend desarrollado en Java (OOP)
-Conexión con base de datos MySQL
+---
 
-Descripción del Proyecto
+## Descripción del Proyecto
 
-Surotec es una organización que trabaja para transformar vidas a través de la tecnología, la educación y la cultura, formando jóvenes de la ruralidad en herramientas digitales para que puedan acceder a oportunidades laborales sin abandonar sus territorios.
+Surotec es una iniciativa enfocada en el desarrollo tecnológico de comunidades rurales, formando jóvenes en herramientas digitales para facilitar su acceso a oportunidades laborales sin abandonar su territorio.
 
-La plataforma web desarrollada permite:
-Visualizar información institucional (landing pública)
-Autenticación de usuarios por roles
-Publicación de proyectos por parte de estudiantes
-Gestión y supervisión de comunidad por parte del administrador
-Centralización y seguimiento del talento formado
+La plataforma permite:
 
-Arquitectura General
+- Visualización pública de información institucional
+- Registro e inicio de sesión
+- Gestión de proyectos por parte de estudiantes
+- Supervisión y administración por parte del rol administrador
+- Comunicación con backend a través de API REST
+
+---
+
+## Arquitectura General
+
+
 Frontend (React + JavaScript)
-Comunicación HTTP (REST API)
-Backend (Java – Programación Orientada a Objetos)
+↓
+HTTP Requests (REST API)
+↓
+Backend (Java - OOP - Spring Boot)
+↓
 Base de Datos MySQL
 
-El frontend consume los endpoints expuestos por el backend para autenticación, gestión de usuarios y gestión de proyectos.
 
-Tecnologías Utilizadas
-Frontend
-React
-JavaScript (ES6+)
-React Router DOM
-Axios o Fetch API
-CSS / Tailwind (si aplica)
+El frontend consume los endpoints expuestos por el backend para autenticación, gestión de usuarios y proyectos.
 
-Backend (Repositorio independiente)
-Java
-Programación Orientada a Objetos (OOP)
-Spring Boot 
-MySQL
+---
 
-Módulos del Sistema
-1. Landing Page (Pública)
-Secciones principales:
-Inicio
-Quiénes Somos
-Noticias
-Contacto
-Quiero Inscribirme
+## Tecnologías Utilizadas
 
-Incluye:
-Propósito institucional
-Problemática rural (Educación, Empleo, Desarrollo Rural)
-Propuesta de valor.
+### Frontend
 
-2. Sistema Interno (Privado)
-Autenticación
-Inicio de sesión
-Validación contra backend
-Control de acceso por roles (Admin / Estudiante)
-Dashboard Estudiante
+- React
+- JavaScript (ES6+)
+- React Router DOM
+- Axios o Fetch API
+- CSS / Tailwind CSS (según implementación)
+
+### Backend (Repositorio independiente)
+
+- Java
+- Programación Orientada a Objetos (OOP)
+- Spring Boot
+- MySQL
+
+---
+
+## Módulos del Sistema
+
+### 1. Landing Page (Pública)
+
+Secciones:
+
+- Inicio
+- Quiénes Somos
+- Noticias
+- Contacto
+- Inscripción
+
+Incluye información institucional, problemática rural y propuesta de valor.
+
+---
+
+### 2. Sistema Interno (Privado)
+
+#### Autenticación
+
+- Inicio de sesión
+- Validación contra backend
+- Control de acceso por roles (Admin / Estudiante)
+- Rutas protegidas mediante componente `ProtectedRoute`
+
+---
+
+### Dashboard Estudiante
 
 Funcionalidades:
-Visualizar perfil
-Subir proyectos
-Consultar estado de proyectos
-Visualizar impacto generado
-Dashboard Administrador
+
+- Visualización de perfil
+- Subida de proyectos
+- Consulta de estado de proyectos
+- Seguimiento de impacto
+
+---
+
+### Dashboard Administrador
 
 Funcionalidades:
-Gestión de usuarios
-Visualización de proyectos
-Supervisión general de la comunidad
-Control administrativo
-Estructura del Proyecto
+
+- Gestión de usuarios
+- Visualización de proyectos
+- Supervisión general del sistema
+- Control administrativo
+
+---
+
+## Estructura del Proyecto
+
 
 /src
+│
 ├── assets/
 ├── components/
 │ ├── landing/
 │ ├── auth/
 │ ├── dashboard/
 │ └── shared/
+│
 ├── pages/
 │ ├── Home.jsx
 │ ├── Login.jsx
 │ ├── StudentDashboard.jsx
 │ └── AdminDashboard.jsx
+│
 ├── services/
 │ ├── api.js
 │ ├── authService.js
 │ └── projectService.js
+│
 ├── routes/
 │ └── ProtectedRoute.jsx
+│
 ├── App.jsx
 └── main.jsx
 
-Instalación
-Clonar el repositorio
-git clone https://github.com/tu-organizacion/frontend-surotec.git
 
+---
+
+## Instalación
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/tu-usuario/frontend-surotec.git
 cd frontend-surotec
-Instalar dependencias
-
+2. Instalar dependencias
 npm install
-
 Variables de Entorno
-Crear un archivo .env en la raíz del proyecto:
 
-Para Vite:
-VITE_API_BASE_URL=http://localhost:8080/api
+Crear un archivo .env en la raíz del proyecto.
 
+Si utilizas Vite:
+
+VITE_API_BASE_URL=http://localhost:8085/api
 VITE_LOGIN_ENDPOINT=/auth/login
 VITE_STUDENT_ENDPOINT=/student
 VITE_ADMIN_ENDPOINT=/admin
 
 Ajustar las rutas según la configuración del backend.
+
 Ejecución del Proyecto
 
 Si utilizas Vite:
@@ -127,24 +165,17 @@ npm run dev
 
 Aplicación disponible en:
 http://localhost:5173
+
 Si utilizas Create React App:
 npm start
+
 Aplicación disponible en:
 http://localhost:3000
-Conexión con Backend
+Requisitos
 
-El backend debe estar ejecutándose en el puerto configurado (8085) y la base de datos MySQL activa.
-
-
-El sistema implementa:
-
-Control de acceso basado en roles
-Validación de autenticación
-Componente ProtectedRoute para restringir acceso a dashboards
-Problemas Comunes
-Error CORS
-
-Asegurarse de habilitar CORS en el backend:
+Node.js 18+
+Backend en ejecución (ejemplo: puerto 8085)
+Base de datos MySQL activa
 
 @Configuration
 public class CorsConfig {
@@ -157,16 +188,14 @@ public class CorsConfig {
             .allowedMethods("*");
     }
 }
+
 Estado del Proyecto
-Landing Page funcional
+Landing page funcional
 Sistema de autenticación implementado
-Dashboard Estudiante funcional
-Dashboard Admin funcional
-Integración con backend y base de datos
+Dashboards por rol implementados
+Integración completa con backend y base de datos
 
-
-Equipo de Desarrollo
-
+Equipo de Desarrollo:
 Gabriela Montilla – Full Stack Developer
 Juan Sebastian Usuga – Full Stack Developer
 Samuel Ospina – Full Stack Developer
