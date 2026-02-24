@@ -1,4 +1,4 @@
-const URL_BASE = "http://localhost:8086"
+/* const URL_BASE = "http://localhost:8086"
 
 export const endpoints = {
   users: {
@@ -84,3 +84,60 @@ export const endpoints = {
     delete: (id) => URL_BASE + "/donations/" + id
   }
 }
+ */
+
+// src/services/api.js
+const BASE_URL = "http://localhost:8086";
+
+async function request(endpoint, options = {}) {
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    headers: {
+      "Content-Type": "application/json",
+      // "Authorization": `Bearer ${localStorage.getItem("token")}`,
+    },
+    ...options,
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Error ${response.status}: ${errorText}`);
+  }
+
+  return response.json();
+}
+
+// ─── USER ──────────────────────────────────────────────────────────
+export const getUserById     = (idUser)      => request(`/users/${idUser}`);
+export const getAllUsers      = ()            => request("/users");
+
+// ─── STUDENT ───────────────────────────────────────────────────────
+export const getAllStudents   = ()            => request("/students");
+export const getStudentById  = (idStudent)   => request(`/students/${idStudent}`);
+
+// ─── NOTICIAS ──────────────────────────────────────────────────────
+export const getNews         = ()            => request("/api/news/status/PUBLISHED");
+export const getNewsByEmployee = (employeeId) => request(`/api/news/employee/${employeeId}`);
+
+// ─── PROYECTOS ─────────────────────────────────────────────────────
+// GET todos
+export const getProjects     = ()            => request("/api/projects");
+
+// GET por ID
+export const getProjectById  = (id)          => request(`/api/projects/${id}`);
+
+// POST crear proyecto — AcademyProjectCreatedDto
+// Body esperado según tu BD:
+// { employeeId, title, description, imageUrl, caption, status }
+export const createProject   = (projectData) =>
+  request("/api/projects", {
+    method: "POST",
+    body: JSON.stringify(projectData),
+  });
+
+// ─── COHORTES ──────────────────────────────────────────────────────
+export const getCohorts      = ()            => request("/api/cohorts");
+export const getCohortById   = (id)          => request(`/api/cohorts/${id}`);
+
+// ─── EMPLEADOS ─────────────────────────────────────────────────────
+export const getEmployees    = ()            => request("/api/employees");
+export const getEmployeeById = (id)          => request(`/api/employees/${id}`);
