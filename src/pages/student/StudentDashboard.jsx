@@ -101,7 +101,7 @@ function ErrorCard({ message }) {
   );
 }
 
-const USER_ID = 7;
+const USER_ID = 1;
 
 // ↓ Recibe onNavigate para poder cambiar de vista desde el dashboard
 export default function StudentDashboard({ onNavigate }) {

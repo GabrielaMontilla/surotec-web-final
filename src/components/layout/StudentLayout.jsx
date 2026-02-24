@@ -1,4 +1,3 @@
-// src/components/layout/StudentLayout.jsx
 import React, { useState, useEffect } from "react";
 import "./StudentLayout.css";
 import {
@@ -19,31 +18,45 @@ import { getUserById } from "../../services/api";
 
 export function StudentLayout({ children, user, onLogout, setView, currentView }) {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen]       = useState(false);
-  const [isLoggingOut, setIsLoggingOut]               = useState(false);
-  const [userData, setUserData]                       = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [userData, setUserData] = useState(null);
 
-  /* Trae el nombre real del usuario desde la BD */
-  useEffect(() => {
-    if (!user?.id) return;
-    getUserById(user.id)
-      .then((data) => setUserData(data))
-      .catch(() => setUserData(null));
-  }, [user?.id]);
+  const testUserId = 1; // ← CAMBIA AQUÍ: 7, 8, 9, 1, 2, 3, etc.
 
+useEffect(() => {
+  const idToUse = testUserId || user?.id;
+  if (!idToUse) return;
+
+  getUserById(idToUse)
+    .then((data) => {
+      console.log("🚀 DATOS CRUDOS DEL USUARIO (prueba):", data);
+      console.log("ID usado en prueba:", idToUse);
+      setUserData(data);
+    })
+    .catch((err) => {
+      console.error("❌ Error en prueba:", err);
+      setUserData(null);
+    });
+}, []); // ←
+
+  // Nombre completo - ajustado a camelCase (como devuelve tu API)
   const displayName = userData
-    ? `${userData.firstName ?? userData.first_name ?? ""} ${userData.lastName ?? userData.last_name ?? ""}`.trim()
-    : user?.name ?? "Estudiante";
+    ? `${userData.firstName || ""} ${userData.lastName || ""}`.trim() || user?.username || "Estudiante"
+    : user?.username || "Estudiante";
+
+  // Rol fijo para este layout (estudiantes no tienen roles en la respuesta actual)
+  const displayRole = "Estudiante";
 
   const menuItems = [
-    { id: "dashboard", label: "Mi Dashboard",  icon: LayoutDashboard },
-    { id: "projects",  label: "Mis Proyectos", icon: BookOpen },
-    { id: "news",      label: "Noticias",       icon: Newspaper },
-    { id: "profile",   label: "Mi Perfil",      icon: User },
+    { id: "dashboard", label: "Mi Dashboard", icon: LayoutDashboard },
+    { id: "projects", label: "Mis Proyectos", icon: BookOpen },
+    { id: "news", label: "Noticias", icon: Newspaper },
+    { id: "profile", label: "Mi Perfil", icon: User },
   ];
 
   const notifications = [
-    { id: 1, title: "Nuevo Proyecto Asignado",          time: "Hace 5 min",   type: "info",    icon: BookOpen },
+    { id: 1, title: "Nuevo Proyecto Asignado", time: "Hace 5 min", type: "info", icon: BookOpen },
     { id: 2, title: "Tarea Calificada: React Avanzado", time: "Hace 2 horas", type: "success", icon: CheckCircle2 },
     { id: 3, title: "Recordatorio: Sesión de Mentoria", time: "Hoy, 4:00 PM", type: "warning", icon: Clock },
   ];
@@ -61,8 +74,7 @@ export function StudentLayout({ children, user, onLogout, setView, currentView }
 
   return (
     <div className="layout">
-
-      {/* ── PANTALLA CERRANDO SESIÓN ── */}
+      {/* Pantalla de cierre de sesión */}
       <AnimatePresence>
         {isLoggingOut && (
           <motion.div
@@ -77,9 +89,11 @@ export function StudentLayout({ children, user, onLogout, setView, currentView }
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.1 }}
             >
-              <div className="logout-icon"><LogOut size={28} /></div>
+              <div className="logout-icon">
+                <LogOut size={28} />
+              </div>
               <p className="logout-title">Cerrando sesión...</p>
-              <p className="logout-subtitle">Hasta pronto, {displayName.split(" ")[0]} 👋</p>
+              <p className="logout-subtitle">Hasta pronto, {displayName.split(" ")[0] || "estudiante"} 👋</p>
               <div className="logout-spinner">
                 <div className="logout-spinner-bar" />
               </div>
@@ -88,10 +102,9 @@ export function StudentLayout({ children, user, onLogout, setView, currentView }
         )}
       </AnimatePresence>
 
-      {/* ── NAVBAR ── */}
+      {/* Navbar */}
       <header className="navbar">
         <div className="navbar-inner">
-
           <div className="navbar-left">
             <div className="navbar-logo" onClick={() => setView("dashboard")}>
               <span className="navbar-logo-text">
@@ -114,7 +127,6 @@ export function StudentLayout({ children, user, onLogout, setView, currentView }
           </div>
 
           <div className="navbar-right">
-
             {/* Notificaciones */}
             <div className="notif-wrapper">
               <button
@@ -148,7 +160,9 @@ export function StudentLayout({ children, user, onLogout, setView, currentView }
                             </div>
                             <div className="notif-item-body">
                               <p className="notif-item-title">{n.title}</p>
-                              <p className="notif-item-time"><Clock size={11} /> {n.time}</p>
+                              <p className="notif-item-time">
+                                <Clock size={11} /> {n.time}
+                              </p>
                             </div>
                           </div>
                         ))}
@@ -162,11 +176,11 @@ export function StudentLayout({ children, user, onLogout, setView, currentView }
 
             <div className="navbar-divider" />
 
-            {/* Usuario con nombre real */}
+            {/* Info del usuario */}
             <div className="navbar-user">
               <div className="navbar-user-info">
                 <p className="navbar-user-name">{displayName}</p>
-                <p className="navbar-user-role">ESTUDIANTE</p>
+                <p className="navbar-user-role">{displayRole}</p>
               </div>
               <button className="navbar-avatar" onClick={() => setView("profile")}>
                 <img
@@ -189,7 +203,7 @@ export function StudentLayout({ children, user, onLogout, setView, currentView }
         </div>
       </header>
 
-      {/* ── MENÚ MÓVIL ── */}
+      {/* Menú móvil */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -201,7 +215,9 @@ export function StudentLayout({ children, user, onLogout, setView, currentView }
           >
             <div className="mobile-menu-header">
               <div className="navbar-logo">
-                <div className="navbar-logo-icon"><GraduationCap size={22} /></div>
+                <div className="navbar-logo-icon">
+                  <GraduationCap size={22} />
+                </div>
                 <span className="mobile-menu-logo-text">Surotec</span>
               </div>
               <button className="mobile-menu-close" onClick={() => setIsMobileMenuOpen(false)}>
@@ -232,9 +248,7 @@ export function StudentLayout({ children, user, onLogout, setView, currentView }
                 </div>
                 <div>
                   <p className="mobile-menu-user-name">{displayName}</p>
-                  <p className="mobile-menu-user-id">
-                    @{userData?.username ?? "estudiante"}
-                  </p>
+                  <p className="mobile-menu-user-id">@{userData?.username ?? user?.username ?? "estudiante"}</p>
                 </div>
               </div>
               <button className="mobile-menu-logout" onClick={handleLogout}>
@@ -246,7 +260,7 @@ export function StudentLayout({ children, user, onLogout, setView, currentView }
         )}
       </AnimatePresence>
 
-      {/* ── CONTENIDO ── */}
+      {/* Contenido principal */}
       <main className="layout-main">
         <motion.div
           key={currentView}
@@ -258,7 +272,7 @@ export function StudentLayout({ children, user, onLogout, setView, currentView }
         </motion.div>
       </main>
 
-      {/* ── FOOTER ── */}
+      {/* Footer */}
       <footer className="layout-footer">
         <p className="layout-footer-text">© 2026 Surotec. Todos los derechos reservados.</p>
       </footer>
