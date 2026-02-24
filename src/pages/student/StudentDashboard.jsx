@@ -3,27 +3,15 @@ import React, { useState } from "react";
 import "./StudentDashboard.css";
 import { useStudentData } from "../../services/useStudentData";
 import {
-  BookOpen,
-  Trophy,
-  Clock,
-  ArrowRight,
-  Star,
-  CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  Loader2,
-  AlertCircle,
+  BookOpen, Trophy, Clock, ArrowRight, Star,
+  CheckCircle2, ChevronLeft, ChevronRight, X,
+  Loader2, AlertCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 
-/* ─── Calendario ────────────────────────────────────────────────── */
 const DAYS_OF_WEEK = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
-const MONTHS = [
-  "Enero","Febrero","Marzo","Abril","Mayo","Junio",
-  "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre",
-];
+const MONTHS = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
 function CalendarModal({ onClose }) {
   const today = new Date();
@@ -44,9 +32,7 @@ function CalendarModal({ onClose }) {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <motion.div
-        className="modal"
-        onClick={(e) => e.stopPropagation()}
+      <motion.div className="modal" onClick={(e) => e.stopPropagation()}
         initial={{ opacity: 0, scale: 0.92, y: 30 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.92, y: 30 }}
@@ -71,8 +57,7 @@ function CalendarModal({ onClose }) {
           {Array.from({ length: daysInMonth }).map((_, i) => {
             const day = i + 1;
             return (
-              <div
-                key={day}
+              <div key={day}
                 className={["cal-cell", isToday(day) ? "cal-cell--today" : "", selected === day ? "cal-cell--selected" : ""].join(" ")}
                 onClick={() => setSelected(selected === day ? null : day)}
               >
@@ -116,40 +101,28 @@ function ErrorCard({ message }) {
   );
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   USER_ID: ID del usuario logueado.
-   Tu BD tiene estudiantes con id_user: 7 (Juan), 8 (Maria), 9 (Carlos)
-   Cuando implementes login, reemplaza esto por el ID que venga del
-   contexto de autenticación, por ejemplo: const USER_ID = auth.user.id
-   ───────────────────────────────────────────────────────────────── */
-const USER_ID = 1; // 👈 Juan Perez para pruebas (cambia a 8 o 9 para otros)
+const USER_ID = 7;
 
-export default function StudentDashboard() {
+// ↓ Recibe onNavigate para poder cambiar de vista desde el dashboard
+export default function StudentDashboard({ onNavigate }) {
   const [showCalendar, setShowCalendar] = useState(false);
   const { data, loading, error } = useStudentData(USER_ID);
 
   const { user, student, projects, cohort, news } = data;
 
-  // Nombre completo desde UserDto
-  // Tu BD tiene: first_name, last_name → el DTO probablemente sea firstName, lastName
-  const firstName = user?.firstName ?? user?.first_name ?? user?.nombre ?? "Estudiante";
-  const lastName  = user?.lastName  ?? user?.last_name  ?? user?.apellido ?? "";
-
-  // Cohorte
-  const cohortName = cohort
+  const firstName    = user?.firstName ?? user?.first_name ?? "Estudiante";
+  const lastName     = user?.lastName  ?? user?.last_name  ?? "";
+  const cohortName   = cohort
     ? `Cohorte ${cohort.year} - ${cohort.semester === "FIRST" ? "Primer" : "Segundo"} Semestre`
     : "Sin cohorte asignada";
-
-  // Status del estudiante
   const studentStatus = student?.status ?? "ACTIVE";
 
-  // Tipo CSS para noticias según tu ENUM: DRAFT, PUBLISHED, ARCHIVED
   const tipoClase = (status) => {
     if (!status) return "info";
     const s = status.toUpperCase();
     if (s === "DRAFT")    return "urgent";
     if (s === "ARCHIVED") return "event";
-    return "info"; // PUBLISHED
+    return "info";
   };
 
   return (
@@ -170,7 +143,11 @@ export default function StudentDashboard() {
               Tienes un gran progreso esta semana. Tu próxima clase comienza en 45 minutos.
             </p>
             <div className="hero-buttons">
-              <button onClick={() => toast.info("Abriendo el módulo actual...")} className="btn-primary">
+              {/* ← Navega a "projects" */}
+              <button
+                onClick={() => onNavigate?.("projects")}
+                className="btn-primary"
+              >
                 Continuar Aprendiendo
               </button>
               <button onClick={() => setShowCalendar(true)} className="btn-secondary">
@@ -183,12 +160,8 @@ export default function StudentDashboard() {
         {/* STATS */}
         {loading ? <LoadingCard /> : error ? <ErrorCard message={error} /> : (
           <div className="stats-grid">
-
-            {/* Cohorte */}
             <div className="stat-card">
-              <div className="stat-icon stat-icon--orange">
-                <BookOpen size={22} />
-              </div>
+              <div className="stat-icon stat-icon--orange"><BookOpen size={22} /></div>
               <div className="stat-info">
                 <h3 className="stat-label">Cohorte Actual</h3>
                 <p className="stat-sublabel">{cohortName}</p>
@@ -207,11 +180,8 @@ export default function StudentDashboard() {
               </div>
             </div>
 
-            {/* Info del usuario */}
             <div className="stat-card">
-              <div className="stat-icon stat-icon--green">
-                <Trophy size={22} />
-              </div>
+              <div className="stat-icon stat-icon--green"><Trophy size={22} /></div>
               <div className="stat-info">
                 <h3 className="stat-label">{firstName} {lastName}</h3>
                 <p className="stat-sublabel">@{user?.username ?? ""}</p>
@@ -237,7 +207,8 @@ export default function StudentDashboard() {
             <section className="dashboard-section">
               <div className="section-header">
                 <h2 className="section-title">Proyectos Académicos</h2>
-                <button className="section-link" onClick={() => toast.info("Redirigiendo a proyectos...")}>
+                {/* ← Navega a "projects" */}
+                <button className="section-link" onClick={() => onNavigate?.("projects")}>
                   Ver todos
                 </button>
               </div>
@@ -251,7 +222,7 @@ export default function StudentDashboard() {
                       <div
                         key={project.id}
                         className="project-card"
-                        onClick={() => toast.info(`Abriendo: ${project.title ?? project.titulo}`)}
+                        onClick={() => onNavigate?.("projects")}
                       >
                         <div className="project-thumbnail">
                           <img
@@ -261,17 +232,17 @@ export default function StudentDashboard() {
                         </div>
                         <div className="project-info">
                           <div className="project-header">
-                            <h4 className="project-title">{project.title ?? project.titulo}</h4>
+                            <h4 className="project-title">{project.title}</h4>
                             <span className="project-tag">{project.status ?? "PUBLISHED"}</span>
                           </div>
                           <p className="project-description">
-                            {project.description ?? project.descripcion ?? "Sin descripción."}
+                            {project.description ?? "Sin descripción."}
                           </p>
                           <div className="project-meta">
                             <span className="project-deadline">
                               <Clock size={13} />
-                              {project.publishDate ?? project.publish_date
-                                ? new Date(project.publishDate ?? project.publish_date).toLocaleDateString("es-CO")
+                              {project.publishDate
+                                ? new Date(project.publishDate).toLocaleDateString("es-CO")
                                 : "Sin fecha"}
                             </span>
                             <span className="project-delivered">
@@ -290,7 +261,13 @@ export default function StudentDashboard() {
           {/* NOTICIAS + COMUNIDAD */}
           <div className="main-right">
             <section className="dashboard-section">
-              <h2 className="section-title">Últimas Noticias</h2>
+              <div className="section-header">
+                <h2 className="section-title">Últimas Noticias</h2>
+                {/* ← Navega a "news" */}
+                <button className="section-link" onClick={() => onNavigate?.("news")}>
+                  Ver todas
+                </button>
+              </div>
 
               {loading ? <LoadingCard /> : error ? <ErrorCard message={error} /> :
                 news.length === 0 ? (
@@ -299,18 +276,19 @@ export default function StudentDashboard() {
                   <div className="announcements">
                     {news.slice(0, 3).map((item) => (
                       <div
-                        key={item.id}
+                        key={item.idNews ?? item.id}
                         className={`announcement-card ${tipoClase(item.status)}`}
-                        onClick={() => toast.info(`Abriendo: ${item.title ?? item.titulo}`)}
+                        // ← Navega a "news" al hacer clic en una noticia
+                        onClick={() => onNavigate?.("news")}
                       >
                         <div className="announcement-icon">
                           <BookOpen size={18} />
                         </div>
                         <div className="announcement-content">
-                          <h3>{item.title ?? item.titulo}</h3>
+                          <h3>{item.title}</h3>
                           <span>
-                            {item.publishDate ?? item.publish_date
-                              ? new Date(item.publishDate ?? item.publish_date).toLocaleDateString("es-CO")
+                            {item.publishDate
+                              ? new Date(item.publishDate).toLocaleDateString("es-CO")
                               : ""}
                           </span>
                         </div>
@@ -321,7 +299,8 @@ export default function StudentDashboard() {
                 )
               }
 
-              <button className="btn-ghost" onClick={() => toast.info("Redirigiendo a noticias...")}>
+              {/* ← Botón "Ver Todas" navega a news */}
+              <button className="btn-ghost" onClick={() => onNavigate?.("news")}>
                 Ver Todas las Noticias
               </button>
             </section>
