@@ -31,6 +31,13 @@
   margin: 0;
 }
 
+.sp-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .sp-search-wrapper {
   position: relative;
   display: flex;
@@ -52,13 +59,39 @@
   background: white;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
-  width: 220px;
+  width: 200px;
 }
 
 .sp-search-input:focus {
   border-color: #0AA387;
   box-shadow: 0 0 0 3px rgba(10, 163, 135, 0.12);
 }
+
+/* ─── BOTÓN NUEVO PROYECTO ───────────────── */
+
+.sp-btn-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  background: #0AA387;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(10, 163, 135, 0.25);
+}
+
+.sp-btn-new:hover {
+  background: #07806A;
+  box-shadow: 0 6px 20px rgba(10, 163, 135, 0.35);
+}
+
+.sp-btn-new:active { transform: scale(0.97); }
 
 /* ─── ESTADOS ────────────────────────────── */
 
@@ -100,8 +133,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 48px 24px;
+  gap: 16px;
+  padding: 60px 24px;
   background: white;
   border-radius: 18px;
   border: 1px dashed #e5e5e5;
@@ -117,13 +150,8 @@
   gap: 24px;
 }
 
-@media (max-width: 1100px) {
-  .sp-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 640px) {
-  .sp-grid { grid-template-columns: 1fr; }
-}
+@media (max-width: 1100px) { .sp-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .sp-grid { grid-template-columns: 1fr; } }
 
 /* ─── CARD ───────────────────────────────── */
 
@@ -157,9 +185,7 @@
   transition: transform 0.3s ease;
 }
 
-.sp-card:hover .sp-card-image img {
-  transform: scale(1.04);
-}
+.sp-card:hover .sp-card-image img { transform: scale(1.04); }
 
 .sp-card-body {
   padding: 20px;
@@ -205,20 +231,9 @@
   flex-shrink: 0;
 }
 
-.sp-status--approved {
-  background: #f0fdf4;
-  color: #16a34a;
-}
-
-.sp-status--pending {
-  background: #fefce8;
-  color: #ca8a04;
-}
-
-.sp-status--review {
-  background: #eff6ff;
-  color: #1E88E5;
-}
+.sp-status--approved { background: #f0fdf4; color: #16a34a; }
+.sp-status--pending  { background: #fefce8; color: #ca8a04; }
+.sp-status--review   { background: #eff6ff; color: #1E88E5; }
 
 .sp-card-title {
   font-size: 15px;
@@ -244,9 +259,6 @@
   padding: 12px 20px;
   background: #fafafa;
   border-top: 1px solid #f5f5f5;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
 }
 
 .sp-meta-row {
@@ -256,12 +268,9 @@
   color: #aaa;
 }
 
-.sp-meta-value {
-  font-weight: bold;
-  color: #555;
-}
+.sp-meta-value { font-weight: bold; color: #555; }
 
-/* ─── ACCIONES ───────────────────────────── */
+/* ─── ACCIONES CARD ──────────────────────── */
 
 .sp-card-actions {
   padding: 14px 16px;
@@ -287,7 +296,7 @@
   transition: background 0.2s, transform 0.15s;
 }
 
-.sp-btn-primary:hover { background: #07806A; }
+.sp-btn-primary:hover  { background: #07806A; }
 .sp-btn-primary:active { transform: scale(0.97); }
 
 .sp-btn-icon {
@@ -308,7 +317,7 @@
 .sp-btn-icon:hover { background: #e5e5e5; }
 
 /* ============================================
-   MODAL
+   MODAL BASE
    ============================================ */
 
 .sp-modal-overlay {
@@ -330,7 +339,11 @@
   max-width: 480px;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  max-height: 90vh;
+  overflow-y: auto;
 }
+
+.sp-modal--wide { max-width: 560px; }
 
 .sp-modal-header {
   display: flex;
@@ -338,6 +351,25 @@
   align-items: center;
   padding: 24px 28px 20px;
   border-bottom: 1px solid #f0f0f0;
+  gap: 12px;
+}
+
+.sp-modal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sp-modal-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #f0fdf9;
+  color: #0AA387;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .sp-modal-title {
@@ -345,6 +377,13 @@
   font-weight: bold;
   color: #171717;
   margin: 0;
+  line-height: 1.2;
+}
+
+.sp-modal-subtitle {
+  font-size: 12px;
+  color: #aaa;
+  margin: 3px 0 0;
 }
 
 .sp-modal-close {
@@ -359,6 +398,7 @@
   justify-content: center;
   cursor: pointer;
   transition: background 0.2s;
+  flex-shrink: 0;
 }
 
 .sp-modal-close:hover { background: #e5e5e5; }
@@ -370,26 +410,6 @@
   gap: 20px;
 }
 
-.sp-modal-project-info {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.sp-modal-project-title {
-  font-size: 16px;
-  font-weight: bold;
-  color: #171717;
-  margin: 0;
-}
-
-.sp-modal-project-desc {
-  font-size: 13px;
-  color: #888;
-  margin: 0;
-  line-height: 1.6;
-}
-
 /* ─── Formulario ─────────────────────────── */
 
 .sp-form {
@@ -397,6 +417,14 @@
   flex-direction: column;
   gap: 16px;
 }
+
+.sp-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 480px) { .sp-form-row { grid-template-columns: 1fr; } }
 
 .sp-form-group {
   display: flex;
@@ -410,12 +438,15 @@
   color: #444;
 }
 
+.sp-required { color: #ef4444; margin-left: 2px; }
+
 .sp-input {
   padding: 10px 14px;
   border: 1px solid #e5e5e5;
   border-radius: 12px;
   font-size: 14px;
   outline: none;
+  font-family: inherit;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -431,14 +462,41 @@
   font-size: 14px;
   outline: none;
   resize: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
   font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .sp-textarea:focus {
   border-color: #0AA387;
   box-shadow: 0 0 0 3px rgba(10, 163, 135, 0.12);
 }
+
+/* ─── Info flujo ─────────────────────────── */
+
+.sp-create-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+.sp-create-info-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.sp-create-info-dot--yellow { background: #f59e0b; }
+
+/* ─── Botón submit ───────────────────────── */
 
 .sp-btn-submit {
   width: 100%;
@@ -450,13 +508,24 @@
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s, opacity 0.2s;
   margin-top: 4px;
 }
 
-.sp-btn-submit:hover { background: #07806A; }
+.sp-btn-submit:hover    { background: #07806A; }
+.sp-btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
-/* ─── Status box modal ───────────────────── */
+.sp-btn-spinner { animation: sp-spin 1s linear infinite; }
+
+/* ─── Modal detalles ─────────────────────── */
+
+.sp-modal-project-info { display: flex; flex-direction: column; gap: 6px; }
+.sp-modal-project-title { font-size: 16px; font-weight: bold; color: #171717; margin: 0; }
+.sp-modal-project-desc  { font-size: 13px; color: #888; margin: 0; line-height: 1.6; }
 
 .sp-modal-status-box {
   background: #f9f9f9;

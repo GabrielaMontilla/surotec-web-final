@@ -89,40 +89,55 @@ export const endpoints = {
 // src/services/api.js
 const BASE_URL = "http://localhost:8086";
 
-async function request(endpoint) {
+async function request(endpoint, options = {}) {
   const response = await fetch(`${BASE_URL}${endpoint}`, {
     headers: {
       "Content-Type": "application/json",
       // "Authorization": `Bearer ${localStorage.getItem("token")}`,
     },
+    ...options,
   });
 
   if (!response.ok) {
-    throw new Error(`Error ${response.status} en ${endpoint}`);
+    const errorText = await response.text();
+    throw new Error(`Error ${response.status}: ${errorText}`);
   }
 
   return response.json();
 }
 
 // ─── USER ──────────────────────────────────────────────────────────
-// GET /users/{idUser}
-export const getUserById = (idUser) => request(`/users/${idUser}`);
+export const getUserById     = (idUser)      => request(`/users/${idUser}`);
+export const getAllUsers      = ()            => request("/users");
 
 // ─── STUDENT ───────────────────────────────────────────────────────
-// GET /students  → trae todos, luego filtramos por id_user en el hook
-export const getAllStudents = () => request("/students");
-
-// GET /students/{idStudent}
-export const getStudentById = (idStudent) => request(`/students/${idStudent}`);
+export const getAllStudents   = ()            => request("/students");
+export const getStudentById  = (idStudent)   => request(`/students/${idStudent}`);
 
 // ─── NOTICIAS ──────────────────────────────────────────────────────
-// GET /api/news/status/PUBLISHED  → solo las publicadas
-export const getNews = () => request("/api/news/status/PUBLISHED");
+export const getNews         = ()            => request("/api/news/status/PUBLISHED");
+export const getNewsByEmployee = (employeeId) => request(`/api/news/employee/${employeeId}`);
 
 // ─── PROYECTOS ─────────────────────────────────────────────────────
-// GET /api/projects  → todos (los proyectos son de empleados, no de estudiantes)
-export const getProjects = () => request("/api/projects");
+// GET todos
+export const getProjects     = ()            => request("/api/projects");
+
+// GET por ID
+export const getProjectById  = (id)          => request(`/api/projects/${id}`);
+
+// POST crear proyecto — AcademyProjectCreatedDto
+// Body esperado según tu BD:
+// { employeeId, title, description, imageUrl, caption, status }
+export const createProject   = (projectData) =>
+  request("/api/projects", {
+    method: "POST",
+    body: JSON.stringify(projectData),
+  });
 
 // ─── COHORTES ──────────────────────────────────────────────────────
-// GET /api/cohorts
-export const getCohorts = () => request("/api/cohorts");
+export const getCohorts      = ()            => request("/api/cohorts");
+export const getCohortById   = (id)          => request(`/api/cohorts/${id}`);
+
+// ─── EMPLEADOS ─────────────────────────────────────────────────────
+export const getEmployees    = ()            => request("/api/employees");
+export const getEmployeeById = (id)          => request(`/api/employees/${id}`);
