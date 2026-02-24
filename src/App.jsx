@@ -9,8 +9,7 @@ import EnConstruccion from './pages/landing/EnConstruccion';
 import { StudentLayout } from "./components/layout/StudentLayout";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentProjects from "./pages/student/StudentProjects";
-// Cuando los tengas listos, descomenta estas líneas:
-// import StudentNews from "./pages/student/StudentNews";
+import StudentNews from "./pages/student/StudentNews";
 // import StudentProfile from "./pages/student/StudentProfile";
 import './App.css';
 
@@ -35,8 +34,7 @@ function StudentArea() {
       case "projects":
         return <StudentProjects />;
       case "news":
-        // return <StudentNews />;
-        return <PlaceholderView title="Noticias" />;
+        return <StudentNews />;
       case "profile":
         // return <StudentProfile userId={USER_ID} />;
         return <PlaceholderView title="Mi Perfil" />;
