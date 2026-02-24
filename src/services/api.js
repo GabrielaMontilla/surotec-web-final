@@ -1,4 +1,4 @@
-const URL_BASE = "http://localhost:8086"
+/* const URL_BASE = "http://localhost:8086"
 
 export const endpoints = {
   users: {
@@ -84,3 +84,45 @@ export const endpoints = {
     delete: (id) => URL_BASE + "/donations/" + id
   }
 }
+ */
+
+// src/services/api.js
+const BASE_URL = "http://localhost:8086";
+
+async function request(endpoint) {
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    headers: {
+      "Content-Type": "application/json",
+      // "Authorization": `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error ${response.status} en ${endpoint}`);
+  }
+
+  return response.json();
+}
+
+// ─── USER ──────────────────────────────────────────────────────────
+// GET /users/{idUser}
+export const getUserById = (idUser) => request(`/users/${idUser}`);
+
+// ─── STUDENT ───────────────────────────────────────────────────────
+// GET /students  → trae todos, luego filtramos por id_user en el hook
+export const getAllStudents = () => request("/students");
+
+// GET /students/{idStudent}
+export const getStudentById = (idStudent) => request(`/students/${idStudent}`);
+
+// ─── NOTICIAS ──────────────────────────────────────────────────────
+// GET /api/news/status/PUBLISHED  → solo las publicadas
+export const getNews = () => request("/api/news/status/PUBLISHED");
+
+// ─── PROYECTOS ─────────────────────────────────────────────────────
+// GET /api/projects  → todos (los proyectos son de empleados, no de estudiantes)
+export const getProjects = () => request("/api/projects");
+
+// ─── COHORTES ──────────────────────────────────────────────────────
+// GET /api/cohorts
+export const getCohorts = () => request("/api/cohorts");

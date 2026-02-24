@@ -5,6 +5,9 @@ import Nosotros from './pages/landing/Nosotros';
 import Noticias from './pages/landing/Noticias';
 import Contacto from './pages/landing/Contacto';
 import EnConstruccion from './pages/landing/EnConstruccion';
+import StudentDashboard from "./pages/student/StudentDashboard";
+import { StudentLayout } from "./components/layout/StudentLayout";
+
 import './App.css';
 
 function App() {
@@ -16,6 +19,19 @@ function App() {
         <Route path="/noticias" element={<Noticias />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/en-construccion" element={<EnConstruccion />} />
+        <Route
+  path="/student-dashboard"
+  element={
+    <StudentLayout
+      user={{ name: "Juan" }}
+      setView={() => {}}
+      currentView="dashboard"
+      onLogout={() => {}}
+    >
+      <StudentDashboard />
+    </StudentLayout>
+  }
+/>
       </Routes>
     </Router>
   );
