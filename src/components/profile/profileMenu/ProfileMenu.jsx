@@ -1,21 +1,41 @@
+import React from "react";
+import { User, Key, Bell } from "lucide-react"; // Importamos los íconos
 import "./ProfileMenu.css";
 
-function ProfileMenu() {
+
+const ProfileMenu = ({ activeTab, setActiveTab }) => {
   return (
     <div className="profile-menu">
-      <div className="profile-menu-item active">
+      <button
+        className={`profile-menu-item ${activeTab === "personal" ? "active" : ""}`}
+        onClick={() => setActiveTab("personal")}
+      >
+        <User size={18} />
         Información Personal
-      </div>
+      </button>
 
-      <div className="profile-menu-item">
+
+      <button
+        className={`profile-menu-item ${activeTab === "seguridad" ? "active" : ""}`}
+        onClick={() => setActiveTab("seguridad")}
+      >
+        <Key size={18} />
         Seguridad
-      </div>
+      </button>
 
-      <div className="profile-menu-item">
+
+      <button
+        className={`profile-menu-item ${activeTab === "notificaciones" ? "active" : ""}`}
+        onClick={() => setActiveTab("notificaciones")}
+      >
+        <Bell size={18} />
         Notificaciones
-      </div>
+      </button>
     </div>
   );
-}
+};
+
 
 export default ProfileMenu;
+
+
