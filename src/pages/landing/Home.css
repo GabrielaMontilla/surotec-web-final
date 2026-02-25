@@ -1,0 +1,460 @@
+.home {
+  min-height: 100vh;
+}
+
+/* Hero Section */
+.hero {
+  background: url('/index-first.png') center/cover no-repeat;
+  min-height: 91vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  color: var(--white);
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.5px;
+}
+
+/* ========== RESPONSIVE ========== */
+
+/* Tablets grandes (1024px) */
+@media (max-width: 1024px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+}
+
+/* Tablets (768px) */
+@media (max-width: 768px) {
+  .hero {
+    min-height: 70vh;
+    padding: 3rem 1.5rem;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+}
+
+/* Móviles (480px) */
+@media (max-width: 480px) {
+  .hero {
+    min-height: 60vh;
+    padding: 2rem 1rem;
+  }
+
+  .hero h1 {
+    font-size: 1.5rem;
+    line-height: 1.4;
+    font-weight: 400;
+  }
+}
+
+/* Móviles muy pequeños (360px) */
+@media (max-width: 360px) {
+  .hero h1 {
+    font-size: 1.25rem;
+  }
+}
+/* Propósito Section */
+.proposito {
+  background-color: var(--gray-bg);
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.proposito h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-dark);
+}
+
+.proposito-subtitle {
+  max-width: 900px;
+  margin: 0 auto 4rem;
+  color: var(--text-gray);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.proposito-cards {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.proposito-card {
+  background: var(--white);
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  text-align: left;
+  border: 1px solid #e5e5e5;
+  transition: all 0.3s ease;
+}
+
+.proposito-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.proposito-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+}
+
+.proposito-card p {
+  color: var(--text-gray);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.card-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: gap 0.3s ease;
+}
+
+.card-link:hover {
+  gap: 0.75rem;
+}
+
+/* Noticias Section */
+.noticias-section {
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.noticias-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  
+}
+
+.noticias-subtitle {
+  max-width: 700px;
+  margin: 0 auto 3rem;
+  font-size: 1.05rem;
+}
+
+.noticias-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.news-card {
+  background: var(--white);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #e5e5e5;
+  transition: all 0.3s ease;
+}
+
+.news-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.news-image {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+}
+
+.news-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.news-card:hover .news-image img {
+  transform: scale(1.05);
+}
+
+.news-content {
+  padding: 1.5rem;
+  text-align: left;
+}
+
+.news-date {
+  color: var(--text-gray);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.news-title {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+  line-height: 1.4;
+}
+
+.news-btn {
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 0.6rem 1.5rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.news-btn:hover {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+/* Aliados Section */
+.aliados {
+  background-color: var(--gray-bg);
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.aliados h2 {
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: var(--text-dark);
+}
+
+.aliados-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 3rem;
+  align-items: center;
+}
+
+.partner-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.partner-logo img {
+  max-width: 150px;
+  height: auto;
+  filter: grayscale(100%);
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.partner-logo img:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+/* Newsletter Section */
+.newsletter-section {
+  background: linear-gradient(135deg, #1a8f7a 0%, #2DD4BF 100%);
+  padding: 5rem 2rem;
+}
+
+.newsletter-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.newsletter-content {
+  background-color: var(--white);
+  border-radius: 20px;
+  padding: 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.newsletter-logo {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.newsletter-logo img {
+  max-width: 250px;
+  height: auto;
+}
+
+.newsletter-logo h3 {
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.newsletter-form-box h2 {
+  font-size: 1.8rem;
+  color: var(--text-dark);
+  margin-bottom: 1.5rem;
+}
+
+.newsletter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.newsletter-form .form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.newsletter-form .form-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.newsletter-form .form-field label {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.newsletter-form .form-field input,
+.newsletter-form .form-field textarea {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.newsletter-form .form-field input:focus,
+.newsletter-form .form-field textarea:focus {
+  border-color: var(--primary-color);
+}
+
+.newsletter-form .form-field textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.newsletter-form .form-checkbox {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.newsletter-form .form-checkbox input[type="checkbox"] {
+  margin-top: 0.25rem;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+.newsletter-form .form-checkbox label {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  line-height: 1.5;
+}
+
+.newsletter-form .form-checkbox label small {
+  color: var(--text-gray);
+  font-size: 0.8rem;
+}
+
+.newsletter-form .form-checkbox label a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.newsletter-form .form-checkbox label a:hover {
+  text-decoration: underline;
+}
+
+.newsletter-submit-btn {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  padding: 0.875rem 2.5rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+.newsletter-submit-btn:hover {
+  background-color: #26BDAA;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .proposito h2,
+  .noticias-section h2,
+  .aliados h2 {
+    font-size: 2rem;
+  }
+
+  .newsletter-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .newsletter-logo {
+    text-align: center;
+    align-items: center;
+  }
+
+  .newsletter-submit-btn {
+    align-self: center;
+  }
+}
