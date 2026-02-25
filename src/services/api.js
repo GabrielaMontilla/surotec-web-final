@@ -1,5 +1,3 @@
-const URL_BASE = "http://localhost:8086"
-
 export const endpoints = {
   users: {
     base: "/users",
@@ -105,37 +103,38 @@ async function request(endpoint, options = {}) {
 }
 
 // ─── USER ──────────────────────────────────────────────────────────
-export const getUserById     = (idUser)      => request(`/users/${idUser}`);
-export const getAllUsers      = ()            => request("/users");
+export const getUserById = (idUser) => request(`/users/${idUser}`);
+export const getAllUsers = () => request("/users");
 
 // ─── STUDENT ───────────────────────────────────────────────────────
-export const getAllStudents   = ()            => request("/students");
-export const getStudentById  = (idStudent)   => request(`/students/${idStudent}`);
+export const getAllStudents = () => request("/students");
+export const getStudentById = (idStudent) => request(`/students/${idStudent}`);
 
 // ─── NOTICIAS ──────────────────────────────────────────────────────
-export const getNews         = ()            => request("/api/news/status/PUBLISHED");
-export const getNewsByEmployee = (employeeId) => request(`/api/news/employee/${employeeId}`);
+export const getNews = () => request("/api/news/status/PUBLISHED");
+export const getNewsByEmployee = (employeeId) =>
+  request(`/api/news/employee/${employeeId}`);
 
 // ─── PROYECTOS ─────────────────────────────────────────────────────
 // GET todos
-export const getProjects     = ()            => request("/api/projects");
+export const getProjects = () => request("/api/projects");
 
 // GET por ID
-export const getProjectById  = (id)          => request(`/api/projects/${id}`);
+export const getProjectById = (id) => request(`/api/projects/${id}`);
 
 // POST crear proyecto — AcademyProjectCreatedDto
 // Body esperado según tu BD:
 // { employeeId, title, description, imageUrl, caption, status }
-export const createProject   = (projectData) =>
+export const createProject = (projectData) =>
   request("/api/projects", {
     method: "POST",
     body: JSON.stringify(projectData),
   });
 
 // ─── COHORTES ──────────────────────────────────────────────────────
-export const getCohorts      = ()            => request("/api/cohorts");
-export const getCohortById   = (id)          => request(`/api/cohorts/${id}`);
+export const getCohorts = () => request("/api/cohorts");
+export const getCohortById = (id) => request(`/api/cohorts/${id}`);
 
 // ─── EMPLEADOS ─────────────────────────────────────────────────────
-export const getEmployees    = ()            => request("/api/employees");
-export const getEmployeeById = (id)          => request(`/api/employees/${id}`);
+export const getEmployees = () => request("/api/employees");
+export const getEmployeeById = (id) => request(`/api/employees/${id}`);
