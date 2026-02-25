@@ -14,9 +14,9 @@ import EnConstruccion from '../pages/landing/EnConstruccion';
 // Admin pages
 // import AdminDashboard from '../pages/admin/AdminDashboard';
 import Users from '../pages/admin/Users';
-// import Students from '../pages/admin/Students';
+import Students from '../pages/admin/Students';
 // import Cohorts from '../pages/admin/Cohorts';
-// import Employees from '../pages/admin/Employees';
+import Employees from '../pages/admin/Employees';
 // import Roles from '../pages/admin/Roles';
 // import Projects from '../pages/admin/Projects';
 // import News from '../pages/admin/News';
@@ -31,7 +31,7 @@ export default function AppRouter() {
     <Routes>
       {/* Redirigir la raíz a la landing (o a login si prefieres) */}
       {/* <Route path="/" element={<Navigate to="/" />} /> */}
-      
+
       {/* Landing routes */}
       <Route path="/" element={<Home />} />
       <Route path="/nosotros" element={<Nosotros />} />
@@ -45,13 +45,13 @@ export default function AppRouter() {
       {/* Admin routes */}
       {/* <Route path="/admin/dashboard" element={<AdminDashboard />} /> */}
       <Route path="/admin/users" element={<Users />} />
-      {/* <Route path="/admin/students" element={<Students />} />
-      <Route path="/admin/cohorts" element={<Cohorts />} />
+      <Route path="/admin/students" element={<Students />} />
+      {/* <Route path="/admin/cohorts" element={<Cohorts />} /> */}
       <Route path="/admin/employees" element={<Employees />} />
-      <Route path="/admin/roles" element={<Roles />} />
+      {/* <Route path="/admin/roles" element={<Roles />} />
       <Route path="/admin/projects" element={<Projects />} />
       <Route path="/admin/news" element={<News />} />
-      <Route path="/admin/donations" element={<Donations />} /> */}
+      <Route path="/admin/donations" element={<Donations />} />  */}
 
       {/* Student routes */}
       {/* <Route path="/student/dashboard" element={<StudentDashboard />} />

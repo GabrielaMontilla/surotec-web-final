@@ -146,12 +146,12 @@ export const endpoints = {
   },
 
   employees: {
-    base: "/api/employees",
-    getAll: "/api/employees",
-    getById: (id) => `/api/employees/${id}`,
-    create: "/api/employees",
-    update: (id) => `/api/employees/${id}`,
-    delete: (id) => `/api/employees/${id}`
+    base: "/employees",
+    getAll: "/employees",
+    getById: (id) => `/employees/${id}`,
+    create: "/employees",
+    update: (id) => `/employees/${id}`,
+    delete: (id) => `/employees/${id}`
   },
 
   employeeRoles: {
