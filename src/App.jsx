@@ -1,29 +1,34 @@
 // src/App.jsx
 import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
-import Login from "./pages/Login";
-import Dashboard from "./pages/admin/AdminDashboard";
-import RecuperarPassword from "./pages/RecuperarPassword";
+import { Routes, Route, useNavigate } from "react-router-dom";
+
+// --- PÁGINAS PÚBLICAS ---
 import Home from "./pages/landing/Home";
 import Nosotros from "./pages/landing/Nosotros";
 import Noticias from "./pages/landing/Noticias";
 import Contacto from "./pages/landing/Contacto";
 import EnConstruccion from "./pages/landing/EnConstruccion";
+
+// --- AUTH (TU TRABAJO) ---
+import Login from "./pages/Login";
+import RecuperarPassword from "./pages/RecuperarPassword";
+
+// --- ADMIN (TU TRABAJO) ---
+import AdminDashboard from "./pages/admin/AdminDashboard";
+// Nota: Aquí NO importamos MiPerfilAdmin porque eso está en la rama de Lorena
+
+// --- STUDENT (TRABAJO DE GABRIELA) ---
 import { StudentLayout } from "./components/layout/StudentLayout";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentProjects from "./pages/student/StudentProjects";
 import StudentNews from "./pages/student/StudentNews";
 import { getUserById } from "./services/api";
+
 import "./App.css";
 
 const USER_ID = 7;
 
-/* ─── Área de estudiante ───────────────────────────────────────── */
+/* ─── Área de estudiante de Gabriela ──────────────── */
 function StudentArea() {
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState("dashboard");
@@ -33,10 +38,6 @@ function StudentArea() {
 
   useEffect(() => {
     let isMounted = true;
-
-    // Forzamos el estado inicial de carga
-    // setLoadingUser(true);
-
     getUserById(USER_ID)
       .then((data) => {
         if (isMounted) {
@@ -50,7 +51,6 @@ function StudentArea() {
           setLoadingUser(false);
         }
       });
-
     return () => {
       isMounted = false;
     };
@@ -58,72 +58,20 @@ function StudentArea() {
 
   const handleLogout = () => navigate("/");
 
-  if (loadingUser) {
+  if (loadingUser)
     return (
       <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "column",
-          gap: 12,
-          background: "#f9f9f9",
-          color: "#888",
-          fontSize: 15,
-        }}
+        style={{ display: "flex", justifyContent: "center", marginTop: "50px" }}
       >
-        <div
-          style={{
-            width: 36,
-            height: 36,
-            border: "3px solid #e5e5e5",
-            borderTop: "3px solid #0AA387",
-            borderRadius: "50%",
-            animation: "spin 0.8s linear infinite",
-          }}
-        />
         Cargando sesión...
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
-  }
-
-  if (userError || !user) {
+  if (userError || !user)
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "column",
-          gap: 12,
-          background: "#f9f9f9",
-          color: "#ef4444",
-          fontSize: 15,
-        }}
-      >
-        <p>⚠️ No se pudo cargar el usuario.</p>
-        <p style={{ fontSize: 12, color: "#aaa" }}>{userError}</p>
-        <button
-          onClick={() => navigate("/")}
-          style={{
-            marginTop: 8,
-            padding: "10px 24px",
-            background: "#0AA387",
-            color: "white",
-            border: "none",
-            borderRadius: 12,
-            fontWeight: "bold",
-            cursor: "pointer",
-          }}
-        >
-          Volver al inicio
-        </button>
+      <div style={{ color: "red", textAlign: "center", marginTop: "50px" }}>
+        Error: {userError}
       </div>
     );
-  }
 
   const renderView = () => {
     switch (currentView) {
@@ -136,7 +84,7 @@ function StudentArea() {
       case "news":
         return <StudentNews />;
       case "profile":
-        return <PlaceholderView title="Mi Perfil" />;
+        return <PlaceholderView title="Mi Perfil" />; // Dejamos el placeholder de Gabriela para que Lorena lo cambie luego
       default:
         return (
           <StudentDashboard userId={USER_ID} onNavigate={setCurrentView} />
@@ -180,12 +128,10 @@ function PlaceholderView({ title }) {
   );
 }
 
-/* ─── App Unificada y Limpia ────────────────────────────────────── */
+/* ─── App Unificada ────────────────────────────────────── */
 function App() {
   return (
-    <Router>
       <Routes>
-        {/* Públicas */}
         <Route path="/" element={<Home />} />
         <Route path="/nosotros" element={<Nosotros />} />
         <Route path="/noticias" element={<Noticias />} />
@@ -196,14 +142,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/recuperar" element={<RecuperarPassword />} />
 
-        {/* Privadas */}
-        <Route path="/admin/dashboard" element={<Dashboard />} />
+        {/* Privadas - ADMIN */}
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+        {/* Privadas - STUDENT */}
         <Route path="/student/dashboard" element={<StudentArea />} />
         <Route path="/student-dashboard" element={<StudentArea />} />
       </Routes>
-    </Router>
   );
 }
 
 export default App;
- 

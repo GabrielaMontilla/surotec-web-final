@@ -9,7 +9,6 @@ export const endpoints = {
     login: "/users/login",
     byStatus: "/users/status",
   },
-
   students: {
     base: "/students",
     getAll: "/students",
@@ -19,7 +18,6 @@ export const endpoints = {
     delete: (id) => `/students/${id}`,
     byStatus: "/students/status",
   },
-
   cohorts: {
     base: "/api/cohorts",
     getAll: "/api/cohorts",
@@ -28,7 +26,6 @@ export const endpoints = {
     update: (id) => `/api/cohorts/${id}`,
     delete: (id) => `/api/cohorts/${id}`,
   },
-
   roles: {
     base: "/api/v1/roles",
     getAll: "/api/v1/roles",
@@ -37,7 +34,6 @@ export const endpoints = {
     update: (id) => `/api/v1/roles/${id}`,
     delete: (id) => `/api/v1/roles/${id}`,
   },
-
   employees: {
     base: "/api/employees",
     getAll: "/api/employees",
@@ -46,14 +42,12 @@ export const endpoints = {
     update: (id) => `/api/employees/${id}`,
     delete: (id) => `/api/employees/${id}`,
   },
-
   employeeRoles: {
     assign: (employeeId, roleId) =>
       `/api/v1/employees/${employeeId}/roles/${roleId}`,
     remove: (employeeId, roleId) =>
       `/api/v1/employees/${employeeId}/roles/${roleId}`,
   },
-
   projects: {
     base: "/api/projects",
     getAll: "/api/projects",
@@ -62,7 +56,6 @@ export const endpoints = {
     update: (id) => `/api/projects/${id}`,
     delete: (id) => `/api/projects/${id}`,
   },
-
   news: {
     base: "/api/news",
     create: "/api/news",
@@ -72,7 +65,6 @@ export const endpoints = {
     byStatus: (status) => `/api/news/status/${status}`,
     byEmployee: (employeeId) => `/api/news/employee/${employeeId}`,
   },
-
   donations: {
     base: "/donations",
     getAll: "/donations",
@@ -82,7 +74,6 @@ export const endpoints = {
   },
 };
 
-// src/services/api.js
 const BASE_URL = "http://localhost:8086";
 
 async function request(endpoint, options = {}) {
@@ -116,15 +107,8 @@ export const getNewsByEmployee = (employeeId) =>
   request(`/api/news/employee/${employeeId}`);
 
 // ─── PROYECTOS ─────────────────────────────────────────────────────
-// GET todos
 export const getProjects = () => request("/api/projects");
-
-// GET por ID
 export const getProjectById = (id) => request(`/api/projects/${id}`);
-
-// POST crear proyecto — AcademyProjectCreatedDto
-// Body esperado según tu BD:
-// { employeeId, title, description, imageUrl, caption, status }
 export const createProject = (projectData) =>
   request("/api/projects", {
     method: "POST",
@@ -138,3 +122,41 @@ export const getCohortById = (id) => request(`/api/cohorts/${id}`);
 // ─── EMPLEADOS ─────────────────────────────────────────────────────
 export const getEmployees = () => request("/api/employees");
 export const getEmployeeById = (id) => request(`/api/employees/${id}`);
+
+// ─── PUENTE PARA COMPATIBILIDAD CON EL LOGIN Y OTROS COMPONENTES ───
+// Envolvemos las respuestas en un objeto { data: ... } para simular Axios
+export const apiClient = {
+  get: async (url) => {
+    const data = await request(url);
+    return { data };
+  },
+  post: async (url, payload) => {
+    const data = await request(url, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    return { data };
+  },
+  put: async (url, payload) => {
+    const data = await request(url, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+    return { data };
+  },
+  delete: async (url) => {
+    const data = await request(url, {
+      method: "DELETE",
+    });
+    return { data };
+  },
+};
+
+// Por si tu Login usa la función directa:
+export const loginUser = async (credentials) => {
+  const data = await request("/users/login", {
+    method: "POST",
+    body: JSON.stringify(credentials),
+  });
+  return { data }; // También simulamos Axios aquí
+};
