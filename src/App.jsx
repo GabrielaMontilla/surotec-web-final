@@ -1,7 +1,6 @@
 // src/App.jsx
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import MiPerfilAdmin from "./pages/admin/MiPerfilAdmin";
 
 // --- PÁGINAS PÚBLICAS ---
 import Home from "./pages/landing/Home";
@@ -145,8 +144,7 @@ function App() {
 
         {/* Privadas - ADMIN */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/perfil" element={<MiPerfilAdmin />} />   
-         
+
         {/* Privadas - STUDENT */}
         <Route path="/student/dashboard" element={<StudentArea />} />
         <Route path="/student-dashboard" element={<StudentArea />} />
