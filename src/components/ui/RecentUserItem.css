@@ -1,0 +1,67 @@
+.recent-user-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Para que el último de la lista no tenga la rayita divisoria abajo */
+.recent-user-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: white;
+}
+
+/* Clases de colores para que cada avatar se vea distinto */
+.avatar-blue {
+  background-color: #3b82f6;
+}
+.avatar-green {
+  background-color: #10b981;
+}
+.avatar-purple {
+  background-color: #8b5cf6;
+}
+.avatar-orange {
+  background-color: #f97316;
+}
+.avatar-pink {
+  background-color: #ec4899;
+}
+
+.recent-user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-user-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.recent-user-email {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.recent-user-time {
+  font-size: 12px;
+  color: #9ca3af;
+  white-space: nowrap;
+}

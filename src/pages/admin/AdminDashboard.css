@@ -1,0 +1,85 @@
+.admin-dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Títulos de la cabecera del Dashboard */
+.dashboard-header h1 {
+  font-size: 24px;
+  margin: 0 0 8px 0;
+  color: #111827;
+}
+
+.dashboard-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Grilla para que las 5 tarjetas se acomoden solas y sean responsivas */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* --- 2. CONTENEDOR INFERIOR (Gráfico y Accesos) --- */
+
+/* Grilla principal: 2 columnas, la izquierda es el doble de grande */
+.dashboard-main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Estilo general para las tarjetas blancas contenedoras */
+.dashboard-widget-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f3f4f6;
+}
+
+.widget-title {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Columna Izquierda (Gráfico) */
+.dashboard-left-col {
+  min-height: 400px;
+}
+
+.chart-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  color: #9ca3af;
+}
+
+/* Columna Derecha (Botones y Usuarios) */
+.dashboard-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Grilla de 2x2 para los botones de acceso rápido */
+.quick-access-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.recent-users-placeholder {
+  color: #6b7280;
+  font-size: 14px;
+}
