@@ -1,0 +1,104 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+:root {
+  --primary-color: #2DD4BF;
+  --yellow-bg: #F4D192;
+  --dark-bg: #0A0A0A;
+  --white: #FFFFFF;
+  --gray-bg: #F5F5F5;
+  --text-dark: #1A1A1A;
+  --text-gray: #666666;
+}
+
+/* Inputs: fondo claro y texto oscuro por defecto */
+input,
+textarea,
+select {
+  background-color: var(--white);
+  color: var(--text-dark);
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-gray);
+  opacity: 1;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.08);
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+:root {
+  --primary-color: #2DD4BF;
+  --yellow-bg: #F4D192;
+  --dark-bg: #0A0A0A;
+  --white: #FFFFFF;
+  --gray-bg: #F5F5F5;
+  --text-dark: #1A1A1A;
+  --text-gray: #666666;
+}
+
+/* Inputs: fondo claro y texto oscuro por defecto */
+input,
+textarea,
+select {
+  background-color: var(--white);
+  color: var(--text-dark);
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-gray);
+  opacity: 1;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.08);
+}
