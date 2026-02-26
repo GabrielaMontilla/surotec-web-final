@@ -35,12 +35,12 @@ export const endpoints = {
     delete: (id) => `/api/v1/roles/${id}`,
   },
   employees: {
-    base: "/api/employees",
-    getAll: "/api/employees",
-    getById: (id) => `/api/employees/${id}`,
-    create: "/api/employees",
-    update: (id) => `/api/employees/${id}`,
-    delete: (id) => `/api/employees/${id}`,
+    base: "/employees",
+    getAll: "/employees",
+    getById: (id) => `/employees/${id}`,
+    create: "/employees",
+    update: (id) => `/employees/${id}`,
+    delete: (id) => `/employees/${id}`,
   },
   employeeRoles: {
     assign: (employeeId, roleId) =>
@@ -160,3 +160,6 @@ export const loginUser = async (credentials) => {
   });
   return { data }; // También simulamos Axios aquí
 };
+
+// ✅ Agregamos export default de apiClient para importaciones más simples
+export default apiClient;

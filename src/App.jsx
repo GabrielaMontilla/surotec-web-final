@@ -16,6 +16,9 @@ import RecuperarPassword from "./pages/RecuperarPassword";
 
 // --- ADMIN (TU TRABAJO) ---
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import Users from './pages/admin/Users';
+import Students from './pages/admin/Students';
+import Employees from './pages/admin/Employees';
 // Nota: Aquí NO importamos MiPerfilAdmin porque eso está en la rama de Lorena
 
 // --- STUDENT (TRABAJO DE GABRIELA) ---
@@ -132,25 +135,27 @@ function PlaceholderView({ title }) {
 /* ─── App Unificada ────────────────────────────────────── */
 function App() {
   return (
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/nosotros" element={<Nosotros />} />
-        <Route path="/noticias" element={<Noticias />} />
-        <Route path="/contacto" element={<Contacto />} />
-        <Route path="/en-construccion" element={<EnConstruccion />} />
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/nosotros" element={<Nosotros />} />
+      <Route path="/noticias" element={<Noticias />} />
+      <Route path="/contacto" element={<Contacto />} />
+      <Route path="/en-construccion" element={<EnConstruccion />} />
 
-        {/* Auth */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/recuperar" element={<RecuperarPassword />} />
+      {/* Auth */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/recuperar" element={<RecuperarPassword />} />
 
-        {/* Privadas - ADMIN */}
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/perfil" element={<MiPerfilAdmin />} />   
-         
-        {/* Privadas - STUDENT */}
-        <Route path="/student/dashboard" element={<StudentArea />} />
-        <Route path="/student-dashboard" element={<StudentArea />} />
-      </Routes>
+      {/* Privadas - ADMIN */}
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/users" element={<Users />} />
+      <Route path="/admin/students" element={<Students />} />
+      <Route path="/admin/employees" element={<Employees />} />
+
+      {/* Privadas - STUDENT */}
+      <Route path="/student/dashboard" element={<StudentArea />} />
+      <Route path="/student-dashboard" element={<StudentArea />} />
+    </Routes>
   );
 }
 
