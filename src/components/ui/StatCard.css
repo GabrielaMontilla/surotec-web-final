@@ -1,0 +1,61 @@
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.stat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.stat-icon-wrapper {
+  background-color: #f3f4f6; /* Gris clarito para el fondo del ícono */
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.stat-trend {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.stat-trend.positive {
+  color: #10b981;
+} /* Verde para cuando sube */
+.stat-trend.negative {
+  color: #ef4444;
+} /* Rojo para cuando baja */
+.stat-trend.neutral {
+  color: #6b7280;
+} /* Gris para cuando se mantiene */
+
+.stat-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-title {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.stat-value {
+  margin: 0;
+  font-size: 24px;
+  color: #111827;
+  font-weight: 700;
+}

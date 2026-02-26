@@ -27,7 +27,7 @@ const Contacto = () => {
 
   const partners = [
     { name: 'Globant', logo: '/partners/globant.png' },
-    { name: 'CESDE', logo: '/partners/cesde.png' },
+    { name: 'SENA', logo: '/partners/sena.png' },
     { name: 'Universidad EAFIT', logo: '/partners/eafit.png' },
     { name: 'Fomento', logo: '/partners/fomento.png' },
     { name: 'Comfama', logo: '/partners/comfama.png' },
