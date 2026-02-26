@@ -1,6 +1,7 @@
 // src/App.jsx
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
+import MiPerfilAdmin from "./pages/admin/MiPerfilAdmin";
 
 // --- PÁGINAS PÚBLICAS ---
 import Home from "./pages/landing/Home";

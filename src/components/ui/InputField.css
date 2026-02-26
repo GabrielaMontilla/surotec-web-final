@@ -1,0 +1,69 @@
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  pointer-events: none; /* Evita que el ícono bloquee el clic en el input */
+}
+
+
+/* Estilos base del input */
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  color: #374151;
+  box-sizing: border-box;
+  outline: none;
+  background-color: white;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+
+.input-group input:focus {
+  border-color: #0aa387; /* Verde principal de Surotec */
+  box-shadow: 0 0 0 3px rgba(10, 163, 135, 0.1); /* Resplandor suave al hacer foco */
+}
+
+
+/* Si el input tiene un ícono por dentro, le damos más padding a la izquierda */
+.input-group input.with-icon {
+  padding-left: 40px;
+}
+
+
