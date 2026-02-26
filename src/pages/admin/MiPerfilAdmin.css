@@ -1,0 +1,38 @@
+.admin-profile-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 30px;
+  align-items: start;
+  width: 100%;
+}
+
+
+/* Nueva clase para la columna izquierda (sin estilos en línea) */
+.profile-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+
+.notifications-placeholder {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f3f4f6;
+}
+
+
+.notifications-placeholder h3 {
+  margin: 0 0 20px 0;
+  color: #111827;
+}
+
+
+.notifications-placeholder p {
+  color: #6b7280;
+  margin: 0;
+}
+
+
