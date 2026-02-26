@@ -1,0 +1,10 @@
+.profile-layout {
+  min-height: 100vh;
+  background-color: #f4f6f9;
+  padding: 40px;
+}
+
+.profile-layout-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
