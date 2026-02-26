@@ -151,3 +151,25 @@
 .modal-actions button[type="button"] {
   background-color: #6c757d;
 }
+
+.users-header, .students-header, .employees-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn-create {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.btn-create:hover {
+  background-color: #218838;
+}

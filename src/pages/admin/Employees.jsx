@@ -9,7 +9,7 @@ const Employees = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [deletingId, setDeletingId] = useState(null);
 
-  // Estado para el modal de edición
+  // Estados para modales
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [editFormData, setEditFormData] = useState({
@@ -22,11 +22,29 @@ const Employees = () => {
   });
   const [saving, setSaving] = useState(false);
 
-  // Función para cargar empleados activos (sin /api)
+  // Estado para el modal de creación
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [createFormData, setCreateFormData] = useState({
+    // Datos del usuario
+    documentType: 'CC',
+    documentNumber: '',
+    firstName: '',
+    lastName: '',
+    username: '',
+    age: '',
+    email: '',
+    password: '',
+    // Datos del empleado
+    position: '',
+    area: '',
+    hireDate: '',
+  });
+  const [creating, setCreating] = useState(false);
+
+  // Función para cargar empleados activos
   const fetchEmployees = async () => {
     try {
-      const response = await api.get('/employees'); // Cambiado: sin /api
-      // Filtrar solo empleados con status 'ACTIVE' del usuario
+      const response = await api.get('/employees');
       const activeEmployees = response.data.filter(emp => emp.userDto?.status === 'ACTIVE');
       setEmployees(activeEmployees);
     } catch (err) {
@@ -40,19 +58,17 @@ const Employees = () => {
     fetchEmployees();
   }, []);
 
-  // Soft delete: desactivar usuario
+  // Soft delete
   const handleDelete = async (id) => {
     if (!window.confirm('¿Estás seguro de que quieres desactivar este empleado?')) return;
     setDeletingId(id);
     try {
       const empToUpdate = employees.find(e => e.idEmployee === id);
       if (!empToUpdate) return;
-
       await api.put(`/users/${empToUpdate.userDto.idUser}`, {
         ...empToUpdate.userDto,
         status: 'INACTIVE'
       });
-
       await fetchEmployees();
     } catch (error) {
       console.error('Error al desactivar empleado:', error);
@@ -81,12 +97,12 @@ const Employees = () => {
     setEditFormData({ ...editFormData, [name]: value });
   };
 
-  // Guardar cambios (dos llamadas)
+  // Guardar cambios (editar)
   const handleSaveEdit = async () => {
     if (!editingEmployee) return;
     setSaving(true);
     try {
-      // 1. Actualizar usuario (sin /api)
+      // Actualizar usuario
       await api.put(`/users/${editingEmployee.userDto.idUser}`, {
         ...editingEmployee.userDto,
         firstName: editFormData.firstName,
@@ -94,14 +110,14 @@ const Employees = () => {
         email: editFormData.email,
       });
 
-      // 2. Actualizar empleado (sin /api)
+      // Actualizar empleado
       const updatedEmployee = {
         ...editingEmployee,
         position: editFormData.position,
         area: editFormData.area,
         hireDate: editFormData.hireDate ? editFormData.hireDate + 'T00:00:00' : editingEmployee.hireDate,
       };
-      await api.put(`/employees/${editingEmployee.idEmployee}`, updatedEmployee); // Cambiado: sin /api
+      await api.put(`/employees/${editingEmployee.idEmployee}`, updatedEmployee);
 
       await fetchEmployees();
       setShowEditModal(false);
@@ -115,6 +131,63 @@ const Employees = () => {
       }
     } finally {
       setSaving(false);
+    }
+  };
+
+  // Manejar cambios en el formulario de creación
+  const handleCreateInputChange = (e) => {
+    const { name, value } = e.target;
+    setCreateFormData({ ...createFormData, [name]: value });
+  };
+
+  // Crear nuevo empleado
+  const handleCreate = async () => {
+    setCreating(true);
+    try {
+      // Construir objeto con la estructura que espera el backend
+      const newEmployee = {
+        position: createFormData.position,
+        area: createFormData.area,
+        hireDate: createFormData.hireDate ? createFormData.hireDate + 'T00:00:00' : null,
+        userDto: {
+          documentType: createFormData.documentType,
+          documentNumber: createFormData.documentNumber,
+          firstName: createFormData.firstName,
+          lastName: createFormData.lastName,
+          username: createFormData.username,
+          age: createFormData.age ? new Date(createFormData.age).toISOString().split('T')[0] : null,
+          email: createFormData.email,
+          password: createFormData.password,
+          status: 'ACTIVE',
+        }
+      };
+
+      await api.post('/employees', newEmployee);
+      await fetchEmployees(); // Recargar lista
+      setShowCreateModal(false);
+      // Limpiar formulario
+      setCreateFormData({
+        documentType: 'CC',
+        documentNumber: '',
+        firstName: '',
+        lastName: '',
+        username: '',
+        age: '',
+        email: '',
+        password: '',
+        position: '',
+        area: '',
+        hireDate: '',
+      });
+    } catch (error) {
+      console.error('Error al crear empleado:', error);
+      if (error.response) {
+        alert(`Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
+      } else {
+        alert('No se pudo crear el empleado');
+      }
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -153,14 +226,19 @@ const Employees = () => {
         </div>
       </div>
 
-      {/* Buscador */}
-      <div className="employees-search">
-        <input
-          type="text"
-          placeholder="Buscar por nombre, email o cargo..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      {/* Botón de crear y buscador */}
+      <div className="employees-actions">
+        <button className="btn-create" onClick={() => setShowCreateModal(true)}>
+          + Crear Empleado
+        </button>
+        <div className="employees-search">
+          <input
+            type="text"
+            placeholder="Buscar por nombre, email o cargo..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
 
       {/* Tabla */}
@@ -204,7 +282,7 @@ const Employees = () => {
         </tbody>
       </table>
 
-      {/* Modal de edición */}
+      {/* Modal de edición (igual que antes) */}
       {showEditModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -272,6 +350,154 @@ const Employees = () => {
                   {saving ? 'Guardando...' : 'Guardar'}
                 </button>
                 <button type="button" onClick={() => setShowEditModal(false)}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de creación */}
+      {showCreateModal && (
+        <div className="modal-overlay">
+          <div className="modal-content modal-lg">
+            <h3>Crear Nuevo Empleado</h3>
+            <form onSubmit={(e) => { e.preventDefault(); handleCreate(); }}>
+              <h4>Datos del Usuario</h4>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Tipo Documento:</label>
+                  <select
+                    name="documentType"
+                    value={createFormData.documentType}
+                    onChange={handleCreateInputChange}
+                    required
+                  >
+                    <option value="CC">CC</option>
+                    <option value="TI">TI</option>
+                    <option value="PAS">PAS</option>
+                    <option value="CE">CE</option>
+                    <option value="RC">RC</option>
+                    <option value="NIT">NIT</option>
+                    <option value="PEP">PEP</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Número Documento:</label>
+                  <input
+                    type="text"
+                    name="documentNumber"
+                    value={createFormData.documentNumber}
+                    onChange={handleCreateInputChange}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Nombre:</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={createFormData.firstName}
+                    onChange={handleCreateInputChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Apellido:</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={createFormData.lastName}
+                    onChange={handleCreateInputChange}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Username:</label>
+                  <input
+                    type="text"
+                    name="username"
+                    value={createFormData.username}
+                    onChange={handleCreateInputChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Fecha Nacimiento:</label>
+                  <input
+                    type="date"
+                    name="age"
+                    value={createFormData.age}
+                    onChange={handleCreateInputChange}
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Email:</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={createFormData.email}
+                    onChange={handleCreateInputChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Contraseña:</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={createFormData.password}
+                    onChange={handleCreateInputChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              <h4>Datos del Empleado</h4>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Cargo:</label>
+                  <input
+                    type="text"
+                    name="position"
+                    value={createFormData.position}
+                    onChange={handleCreateInputChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Área:</label>
+                  <input
+                    type="text"
+                    name="area"
+                    value={createFormData.area}
+                    onChange={handleCreateInputChange}
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Fecha Ingreso:</label>
+                  <input
+                    type="date"
+                    name="hireDate"
+                    value={createFormData.hireDate}
+                    onChange={handleCreateInputChange}
+                  />
+                </div>
+              </div>
+
+              <div className="modal-actions">
+                <button type="submit" disabled={creating}>
+                  {creating ? 'Creando...' : 'Crear'}
+                </button>
+                <button type="button" onClick={() => setShowCreateModal(false)}>
                   Cancelar
                 </button>
               </div>

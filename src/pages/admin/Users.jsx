@@ -8,7 +8,7 @@ const Users = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [deletingId, setDeletingId] = useState(null);
-  
+
   // Estado para el modal de edición
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
@@ -16,27 +16,41 @@ const Users = () => {
     firstName: '',
     lastName: '',
     email: '',
-    // Agrega otros campos que quieras editar
   });
   const [saving, setSaving] = useState(false);
 
+  // Estado para el modal de creación
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [createFormData, setCreateFormData] = useState({
+    documentType: 'CC',
+    documentNumber: '',
+    firstName: '',
+    lastName: '',
+    username: '',
+    age: '',
+    email: '',
+    password: '',
+  });
+  const [creating, setCreating] = useState(false);
+
   // Cargar usuarios activos
+  const fetchUsers = async () => {
+    try {
+      const response = await api.get('/users');
+      const activeUsers = response.data.filter(u => u.status === 'ACTIVE');
+      setUsers(activeUsers);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await api.get('/users');
-        const activeUsers = response.data.filter(user => user.status === 'ACTIVE');
-        setUsers(activeUsers);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchUsers();
   }, []);
 
-  // Eliminar (soft delete)
+  // Soft delete
   const handleDelete = async (id) => {
     if (!window.confirm('¿Estás seguro de que quieres desactivar este usuario?')) return;
     setDeletingId(id);
@@ -45,7 +59,7 @@ const Users = () => {
       if (!userToUpdate) return;
       const updatedUser = { ...userToUpdate, status: 'INACTIVE' };
       await api.put(`/users/${id}`, updatedUser);
-      setUsers(users.filter(u => u.idUser !== id));
+      await fetchUsers();
     } catch (error) {
       console.error('Error al desactivar usuario:', error);
       alert('No se pudo desactivar el usuario');
@@ -61,38 +75,28 @@ const Users = () => {
       firstName: user.firstName || '',
       lastName: user.lastName || '',
       email: user.email || '',
-      // Si hay más campos, agrégalos aquí
     });
     setShowEditModal(true);
   };
 
-  // Manejar cambios en el formulario
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditFormData({
-      ...editFormData,
-      [name]: value
-    });
+    setEditFormData({ ...editFormData, [name]: value });
   };
 
-  // Guardar cambios
+  // Guardar cambios (editar)
   const handleSaveEdit = async () => {
     if (!editingUser) return;
     setSaving(true);
     try {
-      // Crear objeto con los datos actualizados
       const updatedUser = {
         ...editingUser,
-        ...editFormData
-        // Nota: No cambiamos el status aquí, solo datos personales
+        firstName: editFormData.firstName,
+        lastName: editFormData.lastName,
+        email: editFormData.email,
       };
       await api.put(`/users/${editingUser.idUser}`, updatedUser);
-      
-      // Actualizar la lista local
-      setUsers(users.map(u => 
-        u.idUser === editingUser.idUser ? { ...u, ...editFormData } : u
-      ));
-      
+      await fetchUsers();
       setShowEditModal(false);
       setEditingUser(null);
     } catch (error) {
@@ -103,16 +107,55 @@ const Users = () => {
     }
   };
 
-  // Cerrar modal sin guardar
-  const handleCloseModal = () => {
-    setShowEditModal(false);
-    setEditingUser(null);
+  // Funciones para el modal de creación
+  const handleCreateInputChange = (e) => {
+    const { name, value } = e.target;
+    setCreateFormData({ ...createFormData, [name]: value });
   };
 
-  // Filtrar usuarios por búsqueda
-  const filteredUsers = users.filter(user =>
-    `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const handleCreate = async () => {
+    setCreating(true);
+    try {
+      // Construir objeto usuario (sin id)
+      const newUser = {
+        documentType: createFormData.documentType,
+        documentNumber: createFormData.documentNumber,
+        firstName: createFormData.firstName,
+        lastName: createFormData.lastName,
+        username: createFormData.username,
+        age: createFormData.age,
+        email: createFormData.email,
+        password: createFormData.password,
+        status: 'ACTIVE',
+        dateCreate: new Date().toISOString(),
+        dateUpdate: new Date().toISOString(),
+      };
+      await api.post('/users', newUser);
+      await fetchUsers();
+      setShowCreateModal(false);
+      // Resetear formulario
+      setCreateFormData({
+        documentType: 'CC',
+        documentNumber: '',
+        firstName: '',
+        lastName: '',
+        username: '',
+        age: '',
+        email: '',
+        password: '',
+      });
+    } catch (error) {
+      console.error('Error al crear usuario:', error);
+      alert('No se pudo crear el usuario');
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  // Filtrar usuarios
+  const filteredUsers = users.filter(u =>
+    `${u.firstName} ${u.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) return <div className="users-loading">Cargando usuarios...</div>;
@@ -120,8 +163,11 @@ const Users = () => {
 
   return (
     <div className="users-container">
-      <h2 className="users-title">Gestión de Usuarios</h2>
-      
+      <div className="users-header">
+        <h2 className="users-title">Gestión de Usuarios</h2>
+        <button className="btn-create" onClick={() => setShowCreateModal(true)}>+ Crear Usuario</button>
+      </div>
+
       <div className="users-search">
         <input
           type="text"
@@ -142,29 +188,24 @@ const Users = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredUsers.map(user => (
-            <tr key={user.idUser}>
-              <td>{user.firstName} {user.lastName}</td>
-              <td>{user.email}</td>
+          {filteredUsers.map(u => (
+            <tr key={u.idUser}>
+              <td>{u.firstName} {u.lastName}</td>
+              <td>{u.email}</td>
               <td>
-                <span className={`status-badge ${user.status === 'ACTIVE' ? 'active' : 'inactive'}`}>
-                  {user.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}
+                <span className={`status-badge ${u.status === 'ACTIVE' ? 'active' : 'inactive'}`}>
+                  {u.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}
                 </span>
               </td>
-              <td>{new Date(user.dateCreate).toLocaleDateString()}</td>
+              <td>{new Date(u.dateCreate).toLocaleDateString()}</td>
               <td>
-                <button 
-                  className="btn-edit" 
-                  onClick={() => handleEdit(user)}
+                <button className="btn-edit" onClick={() => handleEdit(u)}>Editar</button>
+                <button
+                  className="btn-delete"
+                  onClick={() => handleDelete(u.idUser)}
+                  disabled={deletingId === u.idUser}
                 >
-                  Editar
-                </button>
-                <button 
-                  className="btn-delete" 
-                  onClick={() => handleDelete(user.idUser)}
-                  disabled={deletingId === user.idUser}
-                >
-                  {deletingId === user.idUser ? 'Eliminando...' : 'Eliminar'}
+                  {deletingId === u.idUser ? 'Eliminando...' : 'Eliminar'}
                 </button>
               </td>
             </tr>
@@ -208,14 +249,114 @@ const Users = () => {
                   required
                 />
               </div>
-              {/* Agrega más campos según necesites */}
               <div className="modal-actions">
                 <button type="submit" disabled={saving}>
                   {saving ? 'Guardando...' : 'Guardar'}
                 </button>
-                <button type="button" onClick={handleCloseModal}>
-                  Cancelar
+                <button type="button" onClick={() => setShowEditModal(false)}>Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de creación */}
+      {showCreateModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Crear Nuevo Usuario</h3>
+            <form onSubmit={(e) => { e.preventDefault(); handleCreate(); }}>
+              <div className="form-group">
+                <label>Tipo de documento:</label>
+                <select
+                  name="documentType"
+                  value={createFormData.documentType}
+                  onChange={handleCreateInputChange}
+                  required
+                >
+                  <option value="CC">CC</option>
+                  <option value="TI">TI</option>
+                  <option value="PAS">PAS</option>
+                  <option value="CE">CE</option>
+                  <option value="RC">RC</option>
+                  <option value="NIT">NIT</option>
+                  <option value="PEP">PEP</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Número de documento:</label>
+                <input
+                  type="text"
+                  name="documentNumber"
+                  value={createFormData.documentNumber}
+                  onChange={handleCreateInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Nombre:</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={createFormData.firstName}
+                  onChange={handleCreateInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Apellido:</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={createFormData.lastName}
+                  onChange={handleCreateInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Username:</label>
+                <input
+                  type="text"
+                  name="username"
+                  value={createFormData.username}
+                  onChange={handleCreateInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Fecha de nacimiento:</label>
+                <input
+                  type="date"
+                  name="age"
+                  value={createFormData.age}
+                  onChange={handleCreateInputChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Email:</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={createFormData.email}
+                  onChange={handleCreateInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Contraseña:</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={createFormData.password}
+                  onChange={handleCreateInputChange}
+                  required
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="submit" disabled={creating}>
+                  {creating ? 'Creando...' : 'Crear'}
                 </button>
+                <button type="button" onClick={() => setShowCreateModal(false)}>Cancelar</button>
               </div>
             </form>
           </div>
