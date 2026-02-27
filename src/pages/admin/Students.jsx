@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../services/api';
-import './Students.css';
+import { apiClient as api } from '../../services/api';
+import './admin-common.css';
 
 const Students = () => {
   const [students, setStudents] = useState([]);
@@ -9,39 +9,23 @@ const Students = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [deletingId, setDeletingId] = useState(null);
 
-  // Estados para el modal de edición
+  // Modales
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingStudent, setEditingStudent] = useState(null);
-  const [editFormData, setEditFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-  });
+  const [editFormData, setEditFormData] = useState({ firstName: '', lastName: '', email: '' });
   const [saving, setSaving] = useState(false);
 
-  // Estado para el modal de creación
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [createFormData, setCreateFormData] = useState({
-    // Datos del usuario
-    documentType: 'CC',
-    documentNumber: '',
-    firstName: '',
-    lastName: '',
-    username: '',
-    age: '',
-    email: '',
-    password: '',
-    // El estudiante no tiene campos adicionales (solo status, que se asume ACTIVE)
+    documentType: 'CC', documentNumber: '', firstName: '', lastName: '',
+    username: '', age: '', email: '', password: ''
   });
   const [creating, setCreating] = useState(false);
 
-  // Función para cargar estudiantes activos
   const fetchStudents = async () => {
     try {
       const response = await api.get('/students');
-      // Filtrar solo estudiantes con status 'ACTIVE' (del estudiante, no del usuario)
-      const activeStudents = response.data.filter(s => s.status === 'ACTIVE');
-      setStudents(activeStudents);
+      setStudents(response.data); // Mostramos todos (activos e inactivos)
     } catch (err) {
       setError(err.message);
     } finally {
@@ -49,40 +33,28 @@ const Students = () => {
     }
   };
 
-  useEffect(() => {
-    fetchStudents();
-  }, []);
+  useEffect(() => { fetchStudents(); }, []);
 
-  // Soft delete: cambiar status del estudiante a INACTIVE
   const handleDelete = async (id) => {
-    if (!window.confirm('¿Estás seguro de que quieres desactivar este estudiante?')) return;
+    if (!window.confirm('¿Desactivar estudiante?')) return;
     setDeletingId(id);
     try {
       const studentToUpdate = students.find(s => s.idStudent === id);
-      if (!studentToUpdate) return;
-
-      const updatedStudent = {
-        ...studentToUpdate,
-        status: 'INACTIVE'
-      };
-
-      await api.put(`/students/${id}`, updatedStudent);
+      await api.put(`/students/${id}`, { ...studentToUpdate, status: 'INACTIVE' });
       await fetchStudents();
     } catch (error) {
-      console.error('Error al desactivar estudiante:', error);
-      alert('No se pudo desactivar el estudiante');
+      alert('Error al desactivar');
     } finally {
       setDeletingId(null);
     }
   };
 
-  // Abrir modal de edición
   const handleEdit = (student) => {
     setEditingStudent(student);
     setEditFormData({
       firstName: student.userDto?.firstName || '',
       lastName: student.userDto?.lastName || '',
-      email: student.userDto?.email || '',
+      email: student.userDto?.email || ''
     });
     setShowEditModal(true);
   };
@@ -92,158 +64,149 @@ const Students = () => {
     setEditFormData({ ...editFormData, [name]: value });
   };
 
-  // Guardar cambios (editar) - dos llamadas
   const handleSaveEdit = async () => {
     if (!editingStudent) return;
     setSaving(true);
     try {
-      // 1. Actualizar usuario
+      // Actualizar usuario
       await api.put(`/users/${editingStudent.userDto.idUser}`, {
         ...editingStudent.userDto,
-        firstName: editFormData.firstName,
-        lastName: editFormData.lastName,
-        email: editFormData.email,
+        ...editFormData
       });
-
-      // 2. Actualizar estudiante (solo el status si es necesario, pero no hay otros campos)
-      const updatedStudent = {
-        ...editingStudent,
-        // Si hubiera campos propios del estudiante, se actualizarían aquí
-      };
-      await api.put(`/students/${editingStudent.idStudent}`, updatedStudent);
-
+      // Actualizar estudiante (solo el status si es necesario)
+      await api.put(`/students/${editingStudent.idStudent}`, { ...editingStudent });
       await fetchStudents();
       setShowEditModal(false);
-      setEditingStudent(null);
     } catch (error) {
-      console.error('Error al editar estudiante:', error);
-      if (error.response) {
-        alert(`Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
-      } else {
-        alert('No se pudo guardar los cambios');
-      }
+      alert('Error al guardar');
     } finally {
       setSaving(false);
     }
   };
 
-  // Manejar cambios en el formulario de creación
   const handleCreateInputChange = (e) => {
     const { name, value } = e.target;
     setCreateFormData({ ...createFormData, [name]: value });
   };
 
-  // Crear nuevo estudiante
   const handleCreate = async () => {
     setCreating(true);
     try {
-      // Construir objeto con la estructura que espera el backend
       const newStudent = {
-        status: 'ACTIVE', // Por defecto activo
+        status: 'ACTIVE',
         userDto: {
-          documentType: createFormData.documentType,
-          documentNumber: createFormData.documentNumber,
-          firstName: createFormData.firstName,
-          lastName: createFormData.lastName,
-          username: createFormData.username,
-          // Parche temporal: enviar edad como número entero (años)
+          ...createFormData,
           age: createFormData.age ? Math.floor((new Date() - new Date(createFormData.age)) / (1000 * 60 * 60 * 24 * 365)) : 0,
-          email: createFormData.email,
-          password: createFormData.password,
-          status: 'ACTIVE', // El usuario también nace activo
+          status: 'ACTIVE'
         }
       };
-
       await api.post('/students', newStudent);
       await fetchStudents();
       setShowCreateModal(false);
-      // Limpiar formulario
-      setCreateFormData({
-        documentType: 'CC',
-        documentNumber: '',
-        firstName: '',
-        lastName: '',
-        username: '',
-        age: '',
-        email: '',
-        password: '',
-      });
+      setCreateFormData({ documentType: 'CC', documentNumber: '', firstName: '', lastName: '', username: '', age: '', email: '', password: '' });
     } catch (error) {
-      console.error('Error al crear estudiante:', error);
-      if (error.response) {
-        alert(`Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
-      } else {
-        alert('No se pudo crear el estudiante');
-      }
+      alert('Error al crear');
     } finally {
       setCreating(false);
     }
   };
 
-  // Filtrar estudiantes
   const filteredStudents = students.filter(s =>
     `${s.userDto?.firstName || ''} ${s.userDto?.lastName || ''}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (s.userDto?.email || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) return <div className="students-loading">Cargando estudiantes...</div>;
-  if (error) return <div className="students-error">Error: {error}</div>;
+  const total = students.length;
+  const active = students.filter(s => s.status === 'ACTIVE').length;
+  const inactive = students.filter(s => s.status === 'INACTIVE').length;
+
+  if (loading) return <div className="admin-page">Cargando...</div>;
+  if (error) return <div className="admin-page">Error: {error}</div>;
 
   return (
-    <div className="students-container">
-      <h2 className="students-title">Gestión de Estudiantes</h2>
-
-      {/* Botón de crear y buscador */}
-      <div className="students-actions">
-        <button className="btn-create" onClick={() => setShowCreateModal(true)}>
+    <div className="admin-page">
+      <div className="admin-header">
+        <div>
+          <h2>Gestión de Estudiantes</h2>
+          <p>Administra todos los estudiantes de la plataforma.</p>
+        </div>
+        <button className="btn-primary" onClick={() => setShowCreateModal(true)}>
           + Crear Estudiante
         </button>
-        <div className="students-search">
-          <input
-            type="text"
-            placeholder="Buscar por nombre o email..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      </div>
+
+      <div className="search-container">
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Buscar por nombre o email..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon total">👥</div>
+          <div className="stat-info">
+            <h3>Total Estudiantes</h3>
+            <p>{total}</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon active">✓</div>
+          <div className="stat-info">
+            <h3>Activos</h3>
+            <p>{active}</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon inactive">✗</div>
+          <div className="stat-info">
+            <h3>Inactivos</h3>
+            <p>{inactive}</p>
+          </div>
         </div>
       </div>
 
-      {/* Tabla */}
-      <table className="students-table">
-        <thead>
-          <tr>
-            <th>ESTUDIANTE</th>
-            <th>EMAIL</th>
-            <th>ESTADO</th>
-            <th>FECHA CREACIÓN</th>
-            <th>ACCIONES</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredStudents.map(s => (
-            <tr key={s.idStudent}>
-              <td>{s.userDto?.firstName} {s.userDto?.lastName}</td>
-              <td>{s.userDto?.email}</td>
-              <td>
-                <span className={`status-badge ${s.status === 'ACTIVE' ? 'active' : 'inactive'}`}>
-                  {s.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}
-                </span>
-              </td>
-              <td>{new Date(s.dateCreate).toLocaleDateString()}</td>
-              <td>
-                <button className="btn-edit" onClick={() => handleEdit(s)}>Editar</button>
-                <button
-                  className="btn-delete"
-                  onClick={() => handleDelete(s.idStudent)}
-                  disabled={deletingId === s.idStudent}
-                >
-                  {deletingId === s.idStudent ? 'Eliminando...' : 'Eliminar'}
-                </button>
-              </td>
+      <div className="table-container">
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>ESTUDIANTE</th>
+              <th>EMAIL</th>
+              <th>ESTADO</th>
+              <th>FECHA CREACIÓN</th>
+              <th>ACCIONES</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredStudents.map(s => (
+              <tr key={s.idStudent}>
+                <td>
+                  <div>{s.userDto?.firstName} {s.userDto?.lastName}</div>
+                  <small style={{ color: '#7f8c8d' }}>{s.userDto?.email}</small>
+                </td>
+                <td>{s.userDto?.email}</td>
+                <td>
+                  <span className={`status-badge ${s.status === 'ACTIVE' ? 'active' : 'inactive'}`}>
+                    {s.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}
+                  </span>
+                </td>
+                <td>{new Date(s.dateCreate).toLocaleDateString()}</td>
+                <td>
+                  <div className="action-buttons">
+                    <button className="btn-icon edit" onClick={() => handleEdit(s)} title="Editar">✏️</button>
+                    <button className="btn-icon delete" onClick={() => handleDelete(s.idStudent)} disabled={deletingId === s.idStudent} title="Eliminar">
+                      {deletingId === s.idStudent ? '⏳' : '🗑️'}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Modal de edición */}
       {showEditModal && (
@@ -252,42 +215,20 @@ const Students = () => {
             <h3>Editar Estudiante</h3>
             <form onSubmit={(e) => { e.preventDefault(); handleSaveEdit(); }}>
               <div className="form-group">
-                <label>Nombre:</label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={editFormData.firstName}
-                  onChange={handleInputChange}
-                  required
-                />
+                <label>Nombre</label>
+                <input type="text" name="firstName" value={editFormData.firstName} onChange={handleInputChange} required />
               </div>
               <div className="form-group">
-                <label>Apellido:</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={editFormData.lastName}
-                  onChange={handleInputChange}
-                  required
-                />
+                <label>Apellido</label>
+                <input type="text" name="lastName" value={editFormData.lastName} onChange={handleInputChange} required />
               </div>
               <div className="form-group">
-                <label>Email:</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={editFormData.email}
-                  onChange={handleInputChange}
-                  required
-                />
+                <label>Email</label>
+                <input type="email" name="email" value={editFormData.email} onChange={handleInputChange} required />
               </div>
               <div className="modal-actions">
-                <button type="submit" disabled={saving}>
-                  {saving ? 'Guardando...' : 'Guardar'}
-                </button>
-                <button type="button" onClick={() => setShowEditModal(false)}>
-                  Cancelar
-                </button>
+                <button type="submit" className="btn-primary" disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowEditModal(false)}>Cancelar</button>
               </div>
             </form>
           </div>
@@ -300,111 +241,51 @@ const Students = () => {
           <div className="modal-content modal-lg">
             <h3>Crear Nuevo Estudiante</h3>
             <form onSubmit={(e) => { e.preventDefault(); handleCreate(); }}>
-              <h4>Datos del Usuario</h4>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Tipo Documento:</label>
-                  <select
-                    name="documentType"
-                    value={createFormData.documentType}
-                    onChange={handleCreateInputChange}
-                    required
-                  >
-                    <option value="CC">CC</option>
-                    <option value="TI">TI</option>
-                    <option value="PAS">PAS</option>
-                    <option value="CE">CE</option>
-                    <option value="RC">RC</option>
-                    <option value="NIT">NIT</option>
-                    <option value="PEP">PEP</option>
+                  <label>Tipo Documento</label>
+                  <select name="documentType" value={createFormData.documentType} onChange={handleCreateInputChange} required>
+                    {['CC','TI','PAS','CE','RC','NIT','PEP'].map(opt => <option key={opt} value={opt}>{opt}</option>)}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Número Documento:</label>
-                  <input
-                    type="text"
-                    name="documentNumber"
-                    value={createFormData.documentNumber}
-                    onChange={handleCreateInputChange}
-                    required
-                  />
+                  <label>Número Documento</label>
+                  <input type="text" name="documentNumber" value={createFormData.documentNumber} onChange={handleCreateInputChange} required />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Nombre:</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={createFormData.firstName}
-                    onChange={handleCreateInputChange}
-                    required
-                  />
+                  <label>Nombre</label>
+                  <input type="text" name="firstName" value={createFormData.firstName} onChange={handleCreateInputChange} required />
                 </div>
                 <div className="form-group">
-                  <label>Apellido:</label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={createFormData.lastName}
-                    onChange={handleCreateInputChange}
-                    required
-                  />
+                  <label>Apellido</label>
+                  <input type="text" name="lastName" value={createFormData.lastName} onChange={handleCreateInputChange} required />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Username:</label>
-                  <input
-                    type="text"
-                    name="username"
-                    value={createFormData.username}
-                    onChange={handleCreateInputChange}
-                    required
-                  />
+                  <label>Username</label>
+                  <input type="text" name="username" value={createFormData.username} onChange={handleCreateInputChange} required />
                 </div>
                 <div className="form-group">
-                  <label>Fecha Nacimiento:</label>
-                  <input
-                    type="date"
-                    name="age"
-                    value={createFormData.age}
-                    onChange={handleCreateInputChange}
-                  />
+                  <label>Fecha Nacimiento</label>
+                  <input type="date" name="age" value={createFormData.age} onChange={handleCreateInputChange} />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Email:</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={createFormData.email}
-                    onChange={handleCreateInputChange}
-                    required
-                  />
+                  <label>Email</label>
+                  <input type="email" name="email" value={createFormData.email} onChange={handleCreateInputChange} required />
                 </div>
                 <div className="form-group">
-                  <label>Contraseña:</label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={createFormData.password}
-                    onChange={handleCreateInputChange}
-                    required
-                  />
+                  <label>Contraseña</label>
+                  <input type="password" name="password" value={createFormData.password} onChange={handleCreateInputChange} required />
                 </div>
               </div>
-
-              {/* No hay campos específicos del estudiante, el status se asume ACTIVE */}
-
               <div className="modal-actions">
-                <button type="submit" disabled={creating}>
-                  {creating ? 'Creando...' : 'Crear'}
-                </button>
-                <button type="button" onClick={() => setShowCreateModal(false)}>
-                  Cancelar
-                </button>
+                <button type="submit" className="btn-primary" disabled={creating}>{creating ? 'Creando...' : 'Crear'}</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowCreateModal(false)}>Cancelar</button>
               </div>
             </form>
           </div>

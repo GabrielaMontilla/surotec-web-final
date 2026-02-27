@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './Employees.css';
 import { apiClient as api } from '../../services/api';
-
+import './admin-common.css';
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
@@ -10,44 +9,26 @@ const Employees = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [deletingId, setDeletingId] = useState(null);
 
-  // Estados para modales
+  // Modales
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [editFormData, setEditFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    position: '',
-    area: '',
-    hireDate: '',
+    firstName: '', lastName: '', email: '', position: '', area: '', hireDate: ''
   });
   const [saving, setSaving] = useState(false);
 
-  // Estado para el modal de creación
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [createFormData, setCreateFormData] = useState({
-    // Datos del usuario
-    documentType: 'CC',
-    documentNumber: '',
-    firstName: '',
-    lastName: '',
-    username: '',
-    age: '',
-    email: '',
-    password: '',
-    // Datos del empleado
-    position: '',
-    area: '',
-    hireDate: '',
+    documentType: 'CC', documentNumber: '', firstName: '', lastName: '',
+    username: '', age: '', email: '', password: '',
+    position: '', area: '', hireDate: ''
   });
   const [creating, setCreating] = useState(false);
 
-  // Función para cargar empleados activos
   const fetchEmployees = async () => {
     try {
       const response = await api.get('/employees');
-      const activeEmployees = response.data.filter(emp => emp.userDto?.status === 'ACTIVE');
-      setEmployees(activeEmployees);
+      setEmployees(response.data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -55,31 +36,22 @@ const Employees = () => {
     }
   };
 
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
+  useEffect(() => { fetchEmployees(); }, []);
 
-  // Soft delete
   const handleDelete = async (id) => {
-    if (!window.confirm('¿Estás seguro de que quieres desactivar este empleado?')) return;
+    if (!window.confirm('¿Desactivar empleado?')) return;
     setDeletingId(id);
     try {
       const empToUpdate = employees.find(e => e.idEmployee === id);
-      if (!empToUpdate) return;
-      await api.put(`/users/${empToUpdate.userDto.idUser}`, {
-        ...empToUpdate.userDto,
-        status: 'INACTIVE'
-      });
+      await api.put(`/users/${empToUpdate.userDto.idUser}`, { ...empToUpdate.userDto, status: 'INACTIVE' });
       await fetchEmployees();
     } catch (error) {
-      console.error('Error al desactivar empleado:', error);
-      alert('No se pudo desactivar el empleado');
+      alert('Error al desactivar');
     } finally {
       setDeletingId(null);
     }
   };
 
-  // Abrir modal de edición
   const handleEdit = (employee) => {
     setEditingEmployee(employee);
     setEditFormData({
@@ -88,7 +60,7 @@ const Employees = () => {
       email: employee.userDto?.email || '',
       position: employee.position || '',
       area: employee.area || '',
-      hireDate: employee.hireDate ? employee.hireDate.split('T')[0] : '',
+      hireDate: employee.hireDate ? employee.hireDate.split('T')[0] : ''
     });
     setShowEditModal(true);
   };
@@ -98,7 +70,6 @@ const Employees = () => {
     setEditFormData({ ...editFormData, [name]: value });
   };
 
-  // Guardar cambios (editar)
   const handleSaveEdit = async () => {
     if (!editingEmployee) return;
     setSaving(true);
@@ -108,44 +79,33 @@ const Employees = () => {
         ...editingEmployee.userDto,
         firstName: editFormData.firstName,
         lastName: editFormData.lastName,
-        email: editFormData.email,
+        email: editFormData.email
       });
-
       // Actualizar empleado
       const updatedEmployee = {
         ...editingEmployee,
         position: editFormData.position,
         area: editFormData.area,
-        hireDate: editFormData.hireDate ? editFormData.hireDate + 'T00:00:00' : editingEmployee.hireDate,
+        hireDate: editFormData.hireDate ? editFormData.hireDate + 'T00:00:00' : editingEmployee.hireDate
       };
       await api.put(`/employees/${editingEmployee.idEmployee}`, updatedEmployee);
-
       await fetchEmployees();
       setShowEditModal(false);
-      setEditingEmployee(null);
     } catch (error) {
-      console.error('Error al editar empleado:', error);
-      if (error.response) {
-        alert(`Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
-      } else {
-        alert('No se pudo guardar los cambios');
-      }
+      alert('Error al guardar');
     } finally {
       setSaving(false);
     }
   };
 
-  // Manejar cambios en el formulario de creación
   const handleCreateInputChange = (e) => {
     const { name, value } = e.target;
     setCreateFormData({ ...createFormData, [name]: value });
   };
 
-  // Crear nuevo empleado
   const handleCreate = async () => {
     setCreating(true);
     try {
-      // Construir objeto con la estructura que espera el backend
       const newEmployee = {
         position: createFormData.position,
         area: createFormData.area,
@@ -159,200 +119,161 @@ const Employees = () => {
           age: createFormData.age ? Math.floor((new Date() - new Date(createFormData.age)) / (1000 * 60 * 60 * 24 * 365)) : 0,
           email: createFormData.email,
           password: createFormData.password,
-          status: 'ACTIVE',
+          status: 'ACTIVE'
         }
       };
-
       await api.post('/employees', newEmployee);
-      await fetchEmployees(); // Recargar lista
+      await fetchEmployees();
       setShowCreateModal(false);
-      // Limpiar formulario
-      setCreateFormData({
-        documentType: 'CC',
-        documentNumber: '',
-        firstName: '',
-        lastName: '',
-        username: '',
-        age: '',
-        email: '',
-        password: '',
-        position: '',
-        area: '',
-        hireDate: '',
-      });
+      setCreateFormData({ documentType: 'CC', documentNumber: '', firstName: '', lastName: '', username: '', age: '', email: '', password: '', position: '', area: '', hireDate: '' });
     } catch (error) {
-      console.error('Error al crear empleado:', error);
-      if (error.response) {
-        alert(`Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
-      } else {
-        alert('No se pudo crear el empleado');
-      }
+      alert('Error al crear');
     } finally {
       setCreating(false);
     }
   };
 
-  // Filtrar empleados
   const filteredEmployees = employees.filter(e =>
     `${e.userDto?.firstName || ''} ${e.userDto?.lastName || ''}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (e.userDto?.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (e.position || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Estadísticas
   const total = employees.length;
   const active = employees.filter(e => e.userDto?.status === 'ACTIVE').length;
   const inactive = employees.filter(e => e.userDto?.status === 'INACTIVE').length;
 
-  if (loading) return <div className="employees-loading">Cargando empleados...</div>;
-  if (error) return <div className="employees-error">Error: {error}</div>;
+  if (loading) return <div className="admin-page">Cargando...</div>;
+  if (error) return <div className="admin-page">Error: {error}</div>;
 
   return (
-    <div className="employees-container">
-      <h2 className="employees-title">Gestión de Empleados</h2>
-
-      {/* Tarjetas de resumen */}
-      <div className="summary-cards">
-        <div className="summary-card total">
-          <p>Total Empleados</p>
-          <span>{total}</span>
+    <div className="admin-page">
+      <div className="admin-header">
+        <div>
+          <h2>Gestión de Empleados</h2>
+          <p>Administra el personal administrativo y académico.</p>
         </div>
-        <div className="summary-card active">
-          <p>Activos</p>
-          <span>{active}</span>
-        </div>
-        <div className="summary-card inactive">
-          <p>Inactivos</p>
-          <span>{inactive}</span>
-        </div>
-      </div>
-
-      {/* Botón de crear y buscador */}
-      <div className="employees-actions">
-        <button className="btn-create" onClick={() => setShowCreateModal(true)}>
+        <button className="btn-primary" onClick={() => setShowCreateModal(true)}>
           + Crear Empleado
         </button>
-        <div className="employees-search">
-          <input
-            type="text"
-            placeholder="Buscar por nombre, email o cargo..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      </div>
+
+      <div className="search-container">
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Buscar por nombre, email o cargo..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon total">👥</div>
+          <div className="stat-info">
+            <h3>Total Empleados</h3>
+            <p>{total}</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon active">✓</div>
+          <div className="stat-info">
+            <h3>Activos</h3>
+            <p>{active}</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon inactive">✗</div>
+          <div className="stat-info">
+            <h3>Inactivos</h3>
+            <p>{inactive}</p>
+          </div>
         </div>
       </div>
 
-      {/* Tabla */}
-      <table className="employees-table">
-        <thead>
-          <tr>
-            <th>EMPLEADO</th>
-            <th>EMAIL</th>
-            <th>CARGO</th>
-            <th>ÁREA</th>
-            <th>FECHA INGRESO</th>
-            <th>ESTADO</th>
-            <th>ACCIONES</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredEmployees.map(e => (
-            <tr key={e.idEmployee}>
-              <td>{e.userDto?.firstName} {e.userDto?.lastName}</td>
-              <td>{e.userDto?.email}</td>
-              <td>{e.position || '—'}</td>
-              <td>{e.area || '—'}</td>
-              <td>{e.hireDate ? new Date(e.hireDate).toLocaleDateString() : '—'}</td>
-              <td>
-                <span className={`status-badge ${e.userDto?.status === 'ACTIVE' ? 'active' : 'inactive'}`}>
-                  {e.userDto?.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}
-                </span>
-              </td>
-              <td>
-                <button className="btn-edit" onClick={() => handleEdit(e)}>Editar</button>
-                <button
-                  className="btn-delete"
-                  onClick={() => handleDelete(e.idEmployee)}
-                  disabled={deletingId === e.idEmployee}
-                >
-                  {deletingId === e.idEmployee ? 'Eliminando...' : 'Eliminar'}
-                </button>
-              </td>
+      <div className="table-container">
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>EMPLEADO</th>
+              <th>EMAIL</th>
+              <th>CARGO</th>
+              <th>ÁREA</th>
+              <th>FECHA INGRESO</th>
+              <th>ESTADO</th>
+              <th>ACCIONES</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredEmployees.map(e => (
+              <tr key={e.idEmployee}>
+                <td>
+                  <div>{e.userDto?.firstName} {e.userDto?.lastName}</div>
+                  <small style={{ color: '#7f8c8d' }}>{e.userDto?.email}</small>
+                </td>
+                <td>{e.userDto?.email}</td>
+                <td>{e.position || '—'}</td>
+                <td>{e.area || '—'}</td>
+                <td>{e.hireDate ? new Date(e.hireDate).toLocaleDateString() : '—'}</td>
+                <td>
+                  <span className={`status-badge ${e.userDto?.status === 'ACTIVE' ? 'active' : 'inactive'}`}>
+                    {e.userDto?.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}
+                  </span>
+                </td>
+                <td>
+                  <div className="action-buttons">
+                    <button className="btn-icon edit" onClick={() => handleEdit(e)} title="Editar">✏️</button>
+                    <button className="btn-icon delete" onClick={() => handleDelete(e.idEmployee)} disabled={deletingId === e.idEmployee} title="Eliminar">
+                      {deletingId === e.idEmployee ? '⏳' : '🗑️'}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      {/* Modal de edición (igual que antes) */}
+      {/* Modal de edición */}
       {showEditModal && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="modal-content modal-lg">
             <h3>Editar Empleado</h3>
             <form onSubmit={(e) => { e.preventDefault(); handleSaveEdit(); }}>
-              <div className="form-group">
-                <label>Nombre:</label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={editFormData.firstName}
-                  onChange={handleInputChange}
-                  required
-                />
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Nombre</label>
+                  <input type="text" name="firstName" value={editFormData.firstName} onChange={handleInputChange} required />
+                </div>
+                <div className="form-group">
+                  <label>Apellido</label>
+                  <input type="text" name="lastName" value={editFormData.lastName} onChange={handleInputChange} required />
+                </div>
               </div>
-              <div className="form-group">
-                <label>Apellido:</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={editFormData.lastName}
-                  onChange={handleInputChange}
-                  required
-                />
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Email</label>
+                  <input type="email" name="email" value={editFormData.email} onChange={handleInputChange} required />
+                </div>
+                <div className="form-group">
+                  <label>Cargo</label>
+                  <input type="text" name="position" value={editFormData.position} onChange={handleInputChange} />
+                </div>
               </div>
-              <div className="form-group">
-                <label>Email:</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={editFormData.email}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Cargo:</label>
-                <input
-                  type="text"
-                  name="position"
-                  value={editFormData.position}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="form-group">
-                <label>Área:</label>
-                <input
-                  type="text"
-                  name="area"
-                  value={editFormData.area}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="form-group">
-                <label>Fecha de Ingreso:</label>
-                <input
-                  type="date"
-                  name="hireDate"
-                  value={editFormData.hireDate}
-                  onChange={handleInputChange}
-                />
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Área</label>
+                  <input type="text" name="area" value={editFormData.area} onChange={handleInputChange} />
+                </div>
+                <div className="form-group">
+                  <label>Fecha Ingreso</label>
+                  <input type="date" name="hireDate" value={editFormData.hireDate} onChange={handleInputChange} />
+                </div>
               </div>
               <div className="modal-actions">
-                <button type="submit" disabled={saving}>
-                  {saving ? 'Guardando...' : 'Guardar'}
-                </button>
-                <button type="button" onClick={() => setShowEditModal(false)}>
-                  Cancelar
-                </button>
+                <button type="submit" className="btn-primary" disabled={saving}>{saving ? 'Guardando...' : 'Guardar'}</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowEditModal(false)}>Cancelar</button>
               </div>
             </form>
           </div>
@@ -365,142 +286,68 @@ const Employees = () => {
           <div className="modal-content modal-lg">
             <h3>Crear Nuevo Empleado</h3>
             <form onSubmit={(e) => { e.preventDefault(); handleCreate(); }}>
-              <h4>Datos del Usuario</h4>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Tipo Documento:</label>
-                  <select
-                    name="documentType"
-                    value={createFormData.documentType}
-                    onChange={handleCreateInputChange}
-                    required
-                  >
-                    <option value="CC">CC</option>
-                    <option value="TI">TI</option>
-                    <option value="PAS">PAS</option>
-                    <option value="CE">CE</option>
-                    <option value="RC">RC</option>
-                    <option value="NIT">NIT</option>
-                    <option value="PEP">PEP</option>
+                  <label>Tipo Documento</label>
+                  <select name="documentType" value={createFormData.documentType} onChange={handleCreateInputChange} required>
+                    {['CC','TI','PAS','CE','RC','NIT','PEP'].map(opt => <option key={opt} value={opt}>{opt}</option>)}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Número Documento:</label>
-                  <input
-                    type="text"
-                    name="documentNumber"
-                    value={createFormData.documentNumber}
-                    onChange={handleCreateInputChange}
-                    required
-                  />
+                  <label>Número Documento</label>
+                  <input type="text" name="documentNumber" value={createFormData.documentNumber} onChange={handleCreateInputChange} required />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Nombre:</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={createFormData.firstName}
-                    onChange={handleCreateInputChange}
-                    required
-                  />
+                  <label>Nombre</label>
+                  <input type="text" name="firstName" value={createFormData.firstName} onChange={handleCreateInputChange} required />
                 </div>
                 <div className="form-group">
-                  <label>Apellido:</label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={createFormData.lastName}
-                    onChange={handleCreateInputChange}
-                    required
-                  />
+                  <label>Apellido</label>
+                  <input type="text" name="lastName" value={createFormData.lastName} onChange={handleCreateInputChange} required />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Username:</label>
-                  <input
-                    type="text"
-                    name="username"
-                    value={createFormData.username}
-                    onChange={handleCreateInputChange}
-                    required
-                  />
+                  <label>Username</label>
+                  <input type="text" name="username" value={createFormData.username} onChange={handleCreateInputChange} required />
                 </div>
                 <div className="form-group">
-                  <label>Fecha Nacimiento:</label>
-                  <input
-                    type="date"
-                    name="age"
-                    value={createFormData.age}
-                    onChange={handleCreateInputChange}
-                  />
+                  <label>Fecha Nacimiento</label>
+                  <input type="date" name="age" value={createFormData.age} onChange={handleCreateInputChange} />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Email:</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={createFormData.email}
-                    onChange={handleCreateInputChange}
-                    required
-                  />
+                  <label>Email</label>
+                  <input type="email" name="email" value={createFormData.email} onChange={handleCreateInputChange} required />
                 </div>
                 <div className="form-group">
-                  <label>Contraseña:</label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={createFormData.password}
-                    onChange={handleCreateInputChange}
-                    required
-                  />
+                  <label>Contraseña</label>
+                  <input type="password" name="password" value={createFormData.password} onChange={handleCreateInputChange} required />
                 </div>
               </div>
-
               <h4>Datos del Empleado</h4>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Cargo:</label>
-                  <input
-                    type="text"
-                    name="position"
-                    value={createFormData.position}
-                    onChange={handleCreateInputChange}
-                  />
+                  <label>Cargo</label>
+                  <input type="text" name="position" value={createFormData.position} onChange={handleCreateInputChange} />
                 </div>
                 <div className="form-group">
-                  <label>Área:</label>
-                  <input
-                    type="text"
-                    name="area"
-                    value={createFormData.area}
-                    onChange={handleCreateInputChange}
-                  />
+                  <label>Área</label>
+                  <input type="text" name="area" value={createFormData.area} onChange={handleCreateInputChange} />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Fecha Ingreso:</label>
-                  <input
-                    type="date"
-                    name="hireDate"
-                    value={createFormData.hireDate}
-                    onChange={handleCreateInputChange}
-                  />
+                  <label>Fecha Ingreso</label>
+                  <input type="date" name="hireDate" value={createFormData.hireDate} onChange={handleCreateInputChange} />
                 </div>
               </div>
-
               <div className="modal-actions">
-                <button type="submit" disabled={creating}>
-                  {creating ? 'Creando...' : 'Crear'}
-                </button>
-                <button type="button" onClick={() => setShowCreateModal(false)}>
-                  Cancelar
-                </button>
+                <button type="submit" className="btn-primary" disabled={creating}>{creating ? 'Creando...' : 'Crear'}</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowCreateModal(false)}>Cancelar</button>
               </div>
             </form>
           </div>
