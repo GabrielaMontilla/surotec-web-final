@@ -11,7 +11,7 @@ const Navbar = () => {
     document.body.style.overflow = '';
   };
 
-  // Fuerza el cierre del menú cada vez que cambia la ruta (clave para mobile)
+  // Cierra el menú automáticamente cuando cambia la ruta (muy importante para mobile)
   useEffect(() => {
     closeMenu();
   }, [location.pathname]);
@@ -24,7 +24,7 @@ const Navbar = () => {
     });
   };
 
-  // Cerrar al pasar de mobile a desktop
+  // Cierra si se pasa de mobile a desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
@@ -57,38 +57,63 @@ const Navbar = () => {
                 <NavLink
                   to={to}
                   end={end}
-                  onClick={closeMenu}  // ← cierra el menú al click
+                  onClick={closeMenu}
                 >
                   {label}
                 </NavLink>
               </li>
             ))}
 
+            {/* Botón Iniciar sesión dentro del menú mobile */}
             <li className="navbar-menu-cta">
               <NavLink
                 to="/login"
                 className="navbar-btn"
                 onClick={closeMenu}
               >
-                <svg className="btn-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                  <polyline points="10 17 15 12 10 7"/>
-                  <line x1="15" y1="12" x2="3" y2="12"/>
+                <svg
+                  className="btn-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                  <polyline points="10 17 15 12 10 7" />
+                  <line x1="15" y1="12" x2="3" y2="12" />
                 </svg>
                 Iniciar sesión
               </NavLink>
             </li>
           </ul>
 
+          {/* Botón Iniciar sesión en desktop */}
           <NavLink to="/login" className="navbar-btn navbar-btn-desktop">
-            <svg className="btn-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-              <polyline points="10 17 15 12 10 7"/>
-              <line x1="15" y1="12" x2="3" y2="12"/>
+            <svg
+              className="btn-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+              <polyline points="10 17 15 12 10 7" />
+              <line x1="15" y1="12" x2="3" y2="12" />
             </svg>
             Iniciar sesión
           </NavLink>
 
+          {/* Hamburguesa */}
           <button
             className={`navbar-hamburger${menuOpen ? ' open' : ''}`}
             onClick={toggleMenu}
@@ -98,10 +123,10 @@ const Navbar = () => {
             <span></span>
             <span></span>
           </button>
-
         </div>
       </nav>
 
+      {/* Overlay para cerrar al tocar fuera */}
       <div
         className={`navbar-overlay${menuOpen ? ' open' : ''}`}
         onClick={closeMenu}

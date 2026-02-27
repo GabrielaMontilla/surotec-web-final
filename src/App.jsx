@@ -1,6 +1,6 @@
 // src/App.jsx
-import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 import MiPerfilAdmin from "./pages/admin/MiPerfilAdmin";
 
 // --- PÁGINAS PÚBLICAS ---
@@ -22,115 +22,10 @@ import Employees from './pages/admin/Employees';
 // Nota: Aquí NO importamos MiPerfilAdmin porque eso está en la rama de Lorena
 
 // --- STUDENT (TRABAJO DE GABRIELA) ---
-import { StudentLayout } from "./components/layout/StudentLayout";
-import StudentDashboard from "./pages/student/StudentDashboard";
-import StudentProjects from "./pages/student/StudentProjects";
-import StudentNews from "./pages/student/StudentNews";
-import { getUserById } from "./services/api";
+import StudentArea from "./pages/student/StudentArea";
 
 import "./App.css";
 
-const USER_ID = 7;
-
-/* ─── Área de estudiante de Gabriela ──────────────── */
-function StudentArea() {
-  const navigate = useNavigate();
-  const [currentView, setCurrentView] = useState("dashboard");
-  const [user, setUser] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(true);
-  const [userError, setUserError] = useState(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    getUserById(USER_ID)
-      .then((data) => {
-        if (isMounted) {
-          setUser(data);
-          setLoadingUser(false);
-        }
-      })
-      .catch((err) => {
-        if (isMounted) {
-          setUserError(err.message);
-          setLoadingUser(false);
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const handleLogout = () => navigate("/");
-
-  if (loadingUser)
-    return (
-      <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "50px" }}
-      >
-        Cargando sesión...
-      </div>
-    );
-  if (userError || !user)
-    return (
-      <div style={{ color: "red", textAlign: "center", marginTop: "50px" }}>
-        Error: {userError}
-      </div>
-    );
-
-  const renderView = () => {
-    switch (currentView) {
-      case "dashboard":
-        return (
-          <StudentDashboard userId={USER_ID} onNavigate={setCurrentView} />
-        );
-      case "projects":
-        return <StudentProjects />;
-      case "news":
-        return <StudentNews />;
-      case "profile":
-        return <PlaceholderView title="Mi Perfil" />; // Dejamos el placeholder de Gabriela para que Lorena lo cambie luego
-      default:
-        return (
-          <StudentDashboard userId={USER_ID} onNavigate={setCurrentView} />
-        );
-    }
-  };
-
-  return (
-    <StudentLayout
-      user={user}
-      currentView={currentView}
-      setView={setCurrentView}
-      onLogout={handleLogout}
-    >
-      {renderView()}
-    </StudentLayout>
-  );
-}
-
-function PlaceholderView({ title }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "80px 24px",
-        gap: 16,
-        background: "white",
-        borderRadius: 20,
-        border: "1px dashed #e5e5e5",
-        color: "#aaa",
-        textAlign: "center",
-      }}
-    >
-      <p style={{ fontSize: 32 }}>🚧</p>
-      <p style={{ fontSize: 18, fontWeight: "bold", color: "#555" }}>{title}</p>
-      <p style={{ fontSize: 14 }}>Esta sección está en construcción.</p>
-    </div>
-  );
-}
 
 /* ─── App Unificada ────────────────────────────────────── */
 function App() {
