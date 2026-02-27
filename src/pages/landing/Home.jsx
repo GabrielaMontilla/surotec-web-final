@@ -42,6 +42,7 @@ const Home = () => {
 
       {/* Hero Section */}
       <section className="hero">
+        <img className="hero-bg" src="/index-first.png" alt="" aria-hidden="true" />
         <div className="hero-content">
           <h1>Desde el suroeste antioqueño creamos un ecosistema tecnológico que florece en el campo.</h1>
         </div>
