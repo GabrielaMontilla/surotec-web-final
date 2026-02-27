@@ -63,14 +63,69 @@
   font-size: 0.85rem;
 }
 
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+/* Tablets (1024px) */
+@media (max-width: 1024px) {
+  .footer-container {
+    gap: 2.5rem;
+  }
+
+  .footer-sections {
+    gap: 2rem;
+  }
+}
+
+/* Tablets (768px) */
 @media (max-width: 768px) {
   .footer-container {
     grid-template-columns: 1fr;
     gap: 2rem;
+    padding: 0 1.5rem;
+  }
+
+  .footer-logo img {
+    height: 40px;
+  }
+
+  /* 2 columnas en tablet para no estirar demasiado */
+  .footer-sections {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Móviles (480px) */
+@media (max-width: 480px) {
+  .footer {
+    padding: 2.5rem 0 1rem;
+  }
+
+  .footer-container {
+    padding: 0 1rem;
+    gap: 1.75rem;
   }
 
   .footer-sections {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .footer-column h3 {
+    font-size: 0.8rem;
+  }
+
+  .footer-column ul li a {
+    font-size: 0.85rem;
+  }
+}
+
+/* Móviles muy pequeños (360px) */
+@media (max-width: 360px) {
+  .footer-sections {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
   }
 }

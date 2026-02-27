@@ -98,21 +98,160 @@
   height: 18px;
 }
 
+/* Botón CTA dentro del menú — solo visible en mobile */
+.navbar-menu-cta {
+  display: none;
+}
+
+/* ========== Hamburguesa — oculto en desktop ========== */
+.navbar-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  z-index: 1100;
+}
+
+.navbar-hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--white);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+/* Animación a X */
+.navbar-hamburger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.navbar-hamburger.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.navbar-hamburger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ========== Overlay ========== */
+.navbar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.navbar-overlay.open {
+  display: block;
+  opacity: 1;
+}
+
+/* ========================================
+   RESPONSIVE + FIXES PARA CLICK EN MOBILE
+   ======================================== */
+
 @media (max-width: 768px) {
   .navbar-container {
-    padding: 0 1rem;
-  }
-
-  .navbar-menu {
-    display: none;
+    padding: 0 1.25rem;
   }
 
   .navbar-logo img {
     height: 32px;
   }
 
-  .navbar-btn {
-    padding: 0.6rem 1rem;
-    font-size: 0.85rem;
+  /* Mostrar hamburguesa */
+  .navbar-hamburger {
+    display: flex;
+  }
+
+  /* Ocultar botón desktop */
+  .navbar-btn-desktop {
+    display: none;
+  }
+
+  /* Menú desliza desde la derecha */
+  .navbar-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 75%;
+    max-width: 300px;
+    height: 100dvh;
+    background-color: var(--dark-bg);
+    flex-direction: column;
+    gap: 0;
+    padding: 5rem 2rem 2rem;
+    z-index: 1001;
+    transition: right 0.25s ease-out; /* reducido de 0.35s para menos problemas con touch */
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    pointer-events: auto !important; /* fuerza que reciba clics/touch */
+  }
+
+  .navbar-menu.open {
+    right: 0;
+    pointer-events: auto;
+  }
+
+  .navbar-menu li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .navbar-menu li:last-child {
+    border-bottom: none;
+  }
+
+  .navbar-menu li a {
+    font-size: 1rem;
+    padding: 1rem 0;
+    display: block;
+    width: 100%;
+    touch-action: manipulation; /* mejora respuesta táctil */
+    -webkit-tap-highlight-color: transparent; /* quita el resaltado azul en Android */
+  }
+
+  /* Sin subrayado animado en mobile */
+  .navbar-menu li a::after {
+    display: none;
+  }
+
+  /* Botón login dentro del menú mobile */
+  .navbar-menu-cta {
+    display: block;
+    margin-top: 2rem;
+    border-bottom: none !important;
+  }
+
+  .navbar-menu-cta .navbar-btn {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    color: #000;
+  }
+
+  /* Asegura que el overlay no bloquee clics en el menú */
+  .navbar-overlay.open {
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-menu {
+    width: 80%;
+  }
+}
+
+@media (max-width: 360px) {
+  .navbar-menu {
+    width: 88%;
   }
 }

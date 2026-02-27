@@ -2,7 +2,7 @@
   min-height: 100vh;
 }
 
-/* Hero Section */
+/* ========== Hero Section ========== */
 .nosotros-hero {
   background-color: var(--yellow-bg);
   padding: 3rem 2rem;
@@ -15,7 +15,7 @@
   font-weight: 700;
 }
 
-/* Intro Section */
+/* ========== Intro Section ========== */
 .nosotros-intro {
   background-color: var(--yellow-bg);
   padding: 0 1rem 5rem;
@@ -38,7 +38,7 @@
   text-align: justify;
 }
 
-/* Historia Section */
+/* ========== Historia Section ========== */
 .historia {
   background-color: var(--gray-bg);
   padding: 5rem 2rem;
@@ -106,7 +106,7 @@
   text-align: justify;
 }
 
-/* Contexto Section */
+/* ========== Contexto Section ========== */
 .contexto {
   background-color: var(--gray-bg);
   padding: 5rem 2rem;
@@ -179,13 +179,59 @@
   color: var(--text-gray);
 }
 
+/* ========================================
+   RESPONSIVE BREAKPOINTS
+   ======================================== */
+
+/* Tablets grandes (1024px) */
+@media (max-width: 1024px) {
+  .nosotros-hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .historia-content {
+    gap: 2.5rem;
+  }
+
+  .image-circle {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+/* Tablets (768px) */
 @media (max-width: 768px) {
+  /* Hero */
+  .nosotros-hero {
+    padding: 2.5rem 1.5rem;
+  }
+
   .nosotros-hero-content h1 {
     font-size: 2rem;
   }
 
+  /* Intro */
+  .nosotros-intro {
+    padding: 0 1.5rem 4rem;
+  }
+
   .intro-box {
     padding: 2rem;
+    border-radius: 16px;
+  }
+
+  .intro-box p {
+    font-size: 1rem;
+  }
+
+  /* Historia */
+  .historia {
+    padding: 3.5rem 1.5rem;
+  }
+
+  .historia h2 {
+    font-size: 2rem;
+    margin-bottom: 2.5rem;
   }
 
   .historia-content {
@@ -193,12 +239,157 @@
     gap: 2rem;
   }
 
+  .historia-image {
+    order: -1; /* imagen arriba del texto */
+  }
+
   .image-circle {
     width: 280px;
     height: 280px;
   }
 
+  .circle-decoration {
+    left: -10px;
+    font-size: 0.7rem;
+  }
+
+  .historia-text h3 {
+    font-size: 1.75rem;
+    text-align: center;
+  }
+
+  .historia-text p {
+    font-size: 1rem;
+  }
+
+  /* Contexto */
+  .contexto {
+    padding: 3.5rem 1.5rem;
+  }
+
+  .contexto h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .contexto-illustration {
+    margin-bottom: 2.5rem;
+  }
+
   .contexto-grid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Móviles (480px) */
+@media (max-width: 480px) {
+  /* Hero */
+  .nosotros-hero {
+    padding: 2rem 1rem;
+  }
+
+  .nosotros-hero-content h1 {
+    font-size: 1.6rem;
+    line-height: 1.3;
+  }
+
+  /* Intro */
+  .nosotros-intro {
+    padding: 0 1rem 3rem;
+  }
+
+  .intro-box {
+    padding: 1.5rem 1.25rem;
+    border-radius: 14px;
+  }
+
+  .intro-box p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  /* Historia */
+  .historia {
+    padding: 3rem 1rem;
+  }
+
+  .historia h2 {
+    font-size: 1.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .image-circle {
+    width: 240px;
+    height: 240px;
+  }
+
+  .image-circle img {
+    border-width: 6px;
+  }
+
+  .circle-decoration {
+    top: -12px;
+    left: 0;
+    font-size: 0.65rem;
+    padding: 0.4rem 1rem;
+  }
+
+  .historia-text h3 {
+    font-size: 1.5rem;
+  }
+
+  .historia-text p {
+    font-size: 0.95rem;
+  }
+
+  /* Contexto */
+  .contexto {
+    padding: 3rem 1rem;
+  }
+
+  .contexto h2 {
+    font-size: 1.75rem;
+  }
+
+  .contexto-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .contexto-number {
+    font-size: 1.75rem;
+  }
+
+  .contexto-title {
+    font-size: 1.15rem;
+  }
+
+  .contexto-subtitle {
+    font-size: 1rem;
+  }
+
+  .contexto-description {
+    font-size: 0.9rem;
+  }
+}
+
+/* Móviles muy pequeños (360px) */
+@media (max-width: 360px) {
+  .nosotros-hero-content h1 {
+    font-size: 1.4rem;
+  }
+
+  .image-circle {
+    width: 210px;
+    height: 210px;
+  }
+
+  .historia h2,
+  .contexto h2 {
+    font-size: 1.5rem;
+  }
+
+  .intro-box {
+    padding: 1.25rem 1rem;
   }
 }

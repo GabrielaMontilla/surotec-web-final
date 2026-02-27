@@ -1,45 +1,51 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Login from "../pages/auth/Login";
+import { Routes, Route } from "react-router-dom";
+
+// --- PÁGINAS PÚBLICAS ---
+import Home from "../pages/landing/Home";
+import Nosotros from "../pages/landing/Nosotros";
+import Noticias from "../pages/landing/Noticias";
+import Contacto from "../pages/landing/Contacto";
+import EnConstruccion from "../pages/landing/EnConstruccion";
+
+// --- AUTH ---
+import Login from "../pages/Login";
+import RecuperarPassword from "../pages/RecuperarPassword";
+
+// --- ADMIN ---
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import Users from "../pages/admin/Users";
 import Students from "../pages/admin/Students";
-import Cohorts from "../pages/admin/Cohorts";
 import Employees from "../pages/admin/Employees";
-import Roles from "../pages/admin/Roles";
-import Projects from "../pages/admin/Projects";
-import News from "../pages/admin/News";
-import Donations from "../pages/admin/Donations";
-import StudentDashboard from "../pages/student/StudentDashboard";
-import StudentProfile from "../pages/student/StudentProfile";
 
-export default function AppRouter() {
+// --- STUDENT ---
+import StudentArea from "../pages/student/StudentArea";
+
+export function AppRoutes() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/*default route */}
-        <Route path="/" element={<Navigate to="/login" />} />
+    <Routes>
+      {/* RUTAS PÚBLICAS - LANDING */}
+      <Route path="/" element={<Home />} />
+      <Route path="/nosotros" element={<Nosotros />} />
+      <Route path="/noticias" element={<Noticias />} />
+      <Route path="/contacto" element={<Contacto />} />
+      <Route path="/en-construccion" element={<EnConstruccion />} />
 
-        {/* authentication */}
-        <Route path="/login" element={<Login />} />
+      {/* RUTAS DE AUTH */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/recuperar" element={<RecuperarPassword />} />
 
-        {/* administrator routes */}
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/users" element={<Users />} />
-        <Route path="/admin/students" element={<Students />} />
-        <Route path="/admin/cohorts" element={<Cohorts />} />
-        <Route path="/admin/employees" element={<Employees />} />
-        <Route path="/admin/roles" element={<Roles />} />
-        <Route path="/admin/projects" element={<Projects />} />
-        <Route path="/admin/news" element={<News />} />
-        <Route path="/admin/donations" element={<Donations />} />
+      {/* RUTAS PRIVADAS - ADMIN */}
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/users" element={<Users />} />
+      <Route path="/admin/students" element={<Students />} />
+      <Route path="/admin/employees" element={<Employees />} />
 
-        {/* student routes */}
-        <Route path="/student/dashboard" element={<StudentDashboard />} />
-        <Route path="/student/profile" element={<StudentProfile />} />
+      {/* RUTAS PRIVADAS - STUDENT */}
+      <Route path="/student/dashboard" element={<StudentArea />} />
+      <Route path="/student-dashboard" element={<StudentArea />} />
 
-        {/* not found route */}
-        <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
-      </Routes>
-    </BrowserRouter>
+      {/* RUTA 404 */}
+      <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
+    </Routes>
   );
 }
