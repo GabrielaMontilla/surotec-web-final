@@ -33,7 +33,7 @@ const Sidebar = ({ isCollapsed }) => {
     { path: "/admin/projects", icon: FolderOpen, label: "Proyectos" },
     { path: "/admin/news", icon: Newspaper, label: "Noticias" },
     { path: "/admin/donations", icon: HeartHandshake, label: "Donaciones" },
-    { path: "/admin/profile", icon: User, label: "Mi Perfil" }, // Ajusta esta ruta si es diferente
+    { path: "/admin/perfil", icon: User, label: "Mi Perfil" }, // Ajusta esta ruta si es diferente
   ];
 
   return (

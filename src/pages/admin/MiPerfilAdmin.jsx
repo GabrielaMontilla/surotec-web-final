@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import ProfileLayout from "../../components/profile/profileLayout/ProfileLayout";
+
+// 1. IMPORTAMOS EL ADMINLAYOUT REAL (El mismo que usa tu Dashboard)
+import AdminLayout from "../../components/layout/AdminLayout";
+
 import ProfileCard from "../../components/profile/profileCard/ProfileCard";
 import ProfileMenu from "../../components/profile/profileMenu/ProfileMenu";
 import ProfileForm from "../../components/profile/profileForm/ProfileForm";
 import ProfileSecurity from "../../components/profile/profileSecurity/ProfileSecurity";
 import "./MiPerfilAdmin.css";
 
-
 function MiPerfilAdmin() {
   const [activeTab, setActiveTab] = useState("personal");
-
 
   const adminUser = {
     nombre: "Admin User",
@@ -17,15 +18,14 @@ function MiPerfilAdmin() {
     avatar: "https://i.pravatar.cc/150?img=12",
   };
 
-
   return (
-    <ProfileLayout>
+    // 2. ENVOLVEMOS TODO CON EL ADMINLAYOUT EN LUGAR DEL PROFILELAYOUT
+    <AdminLayout>
       {/* Título y subtítulo de la página */}
       <div className="profile-header">
         <h1>Mi Perfil</h1>
         <p>Gestiona tu información personal y configuraciones de cuenta.</p>
       </div>
-
 
       <div className="admin-profile-grid">
         {/* Columna Izquierda */}
@@ -33,7 +33,6 @@ function MiPerfilAdmin() {
           <ProfileCard user={adminUser} role="Administrador Global" />
           <ProfileMenu activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
-
 
         {/* Columna Derecha */}
         <div className="profile-right-column">
@@ -47,11 +46,8 @@ function MiPerfilAdmin() {
           )}
         </div>
       </div>
-    </ProfileLayout>
+    </AdminLayout>
   );
 }
 
-
 export default MiPerfilAdmin;
-
-

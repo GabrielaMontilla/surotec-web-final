@@ -16,9 +16,10 @@ import RecuperarPassword from "./pages/RecuperarPassword";
 
 // --- ADMIN (TU TRABAJO) ---
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import Users from './pages/admin/Users';
-import Students from './pages/admin/Students';
-import Employees from './pages/admin/Employees';
+import Users from "./pages/admin/Users";
+import Students from "./pages/admin/Students";
+import Employees from "./pages/admin/Employees";
+
 // Nota: Aquí NO importamos MiPerfilAdmin porque eso está en la rama de Lorena
 
 // --- STUDENT (TRABAJO DE GABRIELA) ---
@@ -151,6 +152,7 @@ function App() {
       <Route path="/admin/users" element={<Users />} />
       <Route path="/admin/students" element={<Students />} />
       <Route path="/admin/employees" element={<Employees />} />
+      <Route path="/admin/perfil" element={<MiPerfilAdmin />} />
 
       {/* Privadas - STUDENT */}
       <Route path="/student/dashboard" element={<StudentArea />} />
