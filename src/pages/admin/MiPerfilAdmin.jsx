@@ -12,6 +12,7 @@ import { getUserById } from "../../services/api";
 function MiPerfilAdmin() {
   const [activeTab, setActiveTab] = useState("personal");
 
+
   // 2. CREAMOS LOS ESTADOS PARA GUARDAR LA DATA DE LA BD
   const [adminUser, setAdminUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -26,11 +27,14 @@ function MiPerfilAdmin() {
         const storedUserStr = localStorage.getItem("user");
         const storedUser = storedUserStr ? JSON.parse(storedUserStr) : null;
 
+
         // Ajusta el "1" por el ID real de tu administrador en la Base de Datos si no hay sesión
         const userId = storedUser?.idUser || storedUser?.id || 1;
 
+
         // Vamos a la Base de Datos usando tu api.js
         const dbData = await getUserById(userId);
+
 
         // Transformamos lo que llegó de la BD al formato que necesitan tus diseños
         setAdminUser({
@@ -52,8 +56,10 @@ function MiPerfilAdmin() {
       }
     };
 
+
     fetchAdminProfile();
   }, []);
+
 
   // 4. PANTALLAS DE CARGA O ERROR PARA QUE NO EXPLOTE LA VISTA
   if (loading) {
@@ -66,6 +72,7 @@ function MiPerfilAdmin() {
     );
   }
 
+
   if (error || !adminUser) {
     return (
       <AdminLayout>
@@ -75,6 +82,7 @@ function MiPerfilAdmin() {
       </AdminLayout>
     );
   }
+
 
   // 5. RENDERIZAMOS LA VISTA YA CON LOS DATOS REALES (`adminUser`)
   return (
@@ -110,3 +118,5 @@ function MiPerfilAdmin() {
 }
 
 export default MiPerfilAdmin;
+
+

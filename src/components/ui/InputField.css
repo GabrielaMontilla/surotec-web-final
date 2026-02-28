@@ -59,6 +59,60 @@
   padding-left: 40px;
 }
 
+
+/* Estilos para que el textarea se vea igual que los inputs normales */
+.input-wrapper textarea.standard-input,
+.input-wrapper textarea.with-icon {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  color: #374151;
+  box-sizing: border-box;
+  outline: none;
+  background-color: white;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  resize: vertical; /* Permite estirarlo hacia abajo */
+  font-family: inherit;
+}
+
+
+.input-wrapper textarea:focus {
+  border-color: #0aa387; /* El verde Surotec */
+  box-shadow: 0 0 0 3px rgba(10, 163, 135, 0.1);
+}
+
+
+
+/* Estilos para que el textarea se vea igual que los inputs normales */
+.input-wrapper textarea.standard-input,
+.input-wrapper textarea.with-icon {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  color: #374151;
+  box-sizing: border-box;
+  outline: none;
+  background-color: white;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  resize: vertical; /* Permite estirarlo hacia abajo */
+  font-family: inherit;
+}
+
+
+.input-wrapper textarea:focus {
+  border-color: #0aa387; /* El verde Surotec */
+  box-shadow: 0 0 0 3px rgba(10, 163, 135, 0.1);
+}
+
+
 /* Estilos para que el textarea se vea igual que los inputs normales */
 .input-wrapper textarea.standard-input,
 .input-wrapper textarea.with-icon {

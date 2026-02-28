@@ -12,11 +12,13 @@ import {
 import { apiClient as api } from "../../services/api";
 import "./MiPerfilStudents.css";
 
+
 const MiPerfilStudents = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [studentInfo, setStudentInfo] = useState(null);
+
 
   // 1. ¡ADIÓS JUAN PÉREZ! Iniciamos todo en blanco para que no salgan datos fantasma
   const [formData, setFormData] = useState({
@@ -27,6 +29,7 @@ const MiPerfilStudents = () => {
     linkedin: "",
   });
 
+
   // 2. BUSCAMOS LA DATA REAL APENAS CARGA
   useEffect(() => {
     const fetchStudentProfile = async () => {
@@ -35,14 +38,18 @@ const MiPerfilStudents = () => {
         const storedUserStr = localStorage.getItem("user");
         const storedUser = storedUserStr ? JSON.parse(storedUserStr) : null;
 
+
         // Sacamos el ID real de la sesión (Si no hay, usamos el 7 de Gabriela como respaldo)
         const userId = storedUser?.idUser || storedUser?.id || 7;
+
 
         // Vamos a la BD (Usamos /users/id porque ahí está la info principal)
         const response = await api.get(`/users/${userId}`);
         const dbData = response.data || response;
 
+
         setStudentInfo(dbData);
+
 
         // Extraemos el nombre priorizando la Base de Datos, y si no, usamos el del LocalStorage
         const firstName =
@@ -58,6 +65,7 @@ const MiPerfilStudents = () => {
         const email =
           dbData.email || dbData.userDto?.email || storedUser?.email || "";
 
+
         // Llenamos el formulario con la data real de GABRIELA (o el que esté logueado)
         setFormData({
           nombre: `${firstName} ${lastName}`.trim(),
@@ -70,6 +78,7 @@ const MiPerfilStudents = () => {
         });
       } catch (err) {
         console.error("Error al cargar perfil de estudiante:", err);
+
 
         // Si la base de datos falla, al menos pintamos la info de la barra superior
         const storedUserStr = localStorage.getItem("user");
@@ -88,12 +97,15 @@ const MiPerfilStudents = () => {
       }
     };
 
+
     fetchStudentProfile();
   }, []);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
 
   const handleSave = async () => {
     setSaving(true);
@@ -107,6 +119,7 @@ const MiPerfilStudents = () => {
     }
   };
 
+
   if (loading) {
     return (
       <div
@@ -117,6 +130,7 @@ const MiPerfilStudents = () => {
       </div>
     );
   }
+
 
   if (error) {
     return (
@@ -129,6 +143,7 @@ const MiPerfilStudents = () => {
     );
   }
 
+
   return (
     <div className="student-profile-container">
       <div className="student-profile-header">
@@ -137,6 +152,7 @@ const MiPerfilStudents = () => {
           Gestiona tu presencia en la plataforma y tu información académica.
         </p>
       </div>
+
 
       <div className="student-profile-grid">
         {/* === COLUMNA IZQUIERDA === */}
@@ -159,12 +175,15 @@ const MiPerfilStudents = () => {
               </button>
             </div>
 
+
             <h2 className="student-name">{formData.nombre}</h2>
             <p className="student-cohort">
               {studentInfo?.cohort?.name || "Full Stack Web Development #4"}
             </p>
 
+
             <div className="student-divider"></div>
+
 
             <div className="student-info-row">
               <span className="student-info-label">ID ESTUDIANTE</span>
@@ -175,7 +194,9 @@ const MiPerfilStudents = () => {
               </span>
             </div>
 
+
             <div className="student-divider"></div>
+
 
             <div className="student-info-row">
               <span className="student-info-label">ESTADO</span>
@@ -187,6 +208,7 @@ const MiPerfilStudents = () => {
               </span>
             </div>
           </div>
+
 
           <div className="student-card social-card">
             <h3>Redes Profesionales</h3>
@@ -203,6 +225,7 @@ const MiPerfilStudents = () => {
             </ul>
           </div>
         </div>
+
 
         {/* === COLUMNA DERECHA === */}
         <div className="student-right-col">
@@ -234,7 +257,9 @@ const MiPerfilStudents = () => {
               />
             </div>
 
+
             <div className="student-divider-large"></div>
+
 
             <div className="form-section">
               <h3 className="section-title">
@@ -255,6 +280,7 @@ const MiPerfilStudents = () => {
                 />
               </div>
 
+
               <div className="form-actions">
                 <button
                   className="btn-save-student"
@@ -268,6 +294,7 @@ const MiPerfilStudents = () => {
             </div>
           </div>
 
+
           {/* Tarjeta Oscura: Estado Académico */}
           <div className="academic-dark-card">
             <div className="academic-info">
@@ -276,6 +303,7 @@ const MiPerfilStudents = () => {
                 Estás al día con todas tus obligaciones académicas y
                 financieras.
               </p>
+
 
               <div className="academic-badges">
                 <div className="dark-badge">
@@ -289,6 +317,7 @@ const MiPerfilStudents = () => {
               </div>
             </div>
 
+
             <div className="academic-icon-circle">
               <GraduationCap size={36} color="white" />
             </div>
@@ -299,4 +328,8 @@ const MiPerfilStudents = () => {
   );
 };
 
+
 export default MiPerfilStudents;
+
+
+

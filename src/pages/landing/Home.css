@@ -2,9 +2,8 @@
   min-height: 100vh;
 }
 
-/* Hero Section */
+/* ========== Hero Section ========== */
 .hero {
-  background: url('/index-first.png') center/cover no-repeat;
   min-height: 91vh;
   display: flex;
   flex-direction: column;
@@ -13,22 +12,32 @@
   position: relative;
   color: var(--white);
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 1rem 2rem;
 }
 
+/* Imagen de fondo como <img> real — funciona en todos los móviles */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  z-index: 0;
+}
+
+/* Tu overlay oscuro — igual que antes */
 .hero::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
+  z-index: 1;
 }
 
 .hero-content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   max-width: 1000px;
   width: 100%;
   padding: 0 1rem;
@@ -41,50 +50,7 @@
   letter-spacing: -0.5px;
 }
 
-/* ========== RESPONSIVE ========== */
-
-/* Tablets grandes (1024px) */
-@media (max-width: 1024px) {
-  .hero h1 {
-    font-size: 2.5rem;
-  }
-}
-
-/* Tablets (768px) */
-@media (max-width: 768px) {
-  .hero {
-    min-height: 70vh;
-    padding: 3rem 1.5rem;
-  }
-
-  .hero h1 {
-    font-size: 2rem;
-    line-height: 1.4;
-    letter-spacing: 0;
-  }
-}
-
-/* Móviles (480px) */
-@media (max-width: 480px) {
-  .hero {
-    min-height: 60vh;
-    padding: 2rem 1rem;
-  }
-
-  .hero h1 {
-    font-size: 1.5rem;
-    line-height: 1.4;
-    font-weight: 400;
-  }
-}
-
-/* Móviles muy pequeños (360px) */
-@media (max-width: 360px) {
-  .hero h1 {
-    font-size: 1.25rem;
-  }
-}
-/* Propósito Section */
+/* ========== Propósito Section ========== */
 .proposito {
   background-color: var(--gray-bg);
   padding: 5rem 2rem;
@@ -153,7 +119,7 @@
   gap: 0.75rem;
 }
 
-/* Noticias Section */
+/* ========== Noticias Section ========== */
 .noticias-section {
   padding: 5rem 2rem;
   text-align: center;
@@ -162,7 +128,6 @@
 .noticias-section h2 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  
 }
 
 .noticias-subtitle {
@@ -247,7 +212,7 @@
   color: var(--white);
 }
 
-/* Aliados Section */
+/* ========== Aliados Section ========== */
 .aliados {
   background-color: var(--gray-bg);
   padding: 4rem 2rem;
@@ -289,7 +254,7 @@
   opacity: 1;
 }
 
-/* Newsletter Section */
+/* ========== Newsletter Section ========== */
 .newsletter-section {
   background: linear-gradient(135deg, #1a8f7a 0%, #2DD4BF 100%);
   padding: 5rem 2rem;
@@ -392,6 +357,7 @@
   height: 18px;
   cursor: pointer;
   accent-color: var(--primary-color);
+  flex-shrink: 0;
 }
 
 .newsletter-form .form-checkbox label {
@@ -433,9 +399,42 @@
   box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
 }
 
-@media (max-width: 768px) {
+/* ========================================
+   RESPONSIVE BREAKPOINTS
+   ======================================== */
+
+/* Tablets grandes (1024px) */
+@media (max-width: 1024px) {
   .hero h1 {
-    font-size: 1.8rem;
+    font-size: 2.5rem;
+  }
+
+  .newsletter-content {
+    gap: 2.5rem;
+  }
+}
+
+/* Tablets (768px) */
+@media (max-width: 768px) {
+
+  /* Hero */
+   .hero {
+    overflow: hidden;
+  }
+
+   .hero-bg {
+    object-position: 70% center;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  /* Propósito */
+  .proposito {
+    padding: 3.5rem 1.5rem;
   }
 
   .proposito h2,
@@ -444,9 +443,47 @@
     font-size: 2rem;
   }
 
+  .proposito-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .proposito-cards {
+    grid-template-columns: 1fr;
+  }
+
+  /* Noticias */
+  .noticias-section {
+    padding: 3.5rem 1.5rem;
+  }
+
+  .noticias-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Aliados */
+  .aliados {
+    padding: 3rem 1.5rem;
+  }
+
+  .aliados h2 {
+    margin-bottom: 2rem;
+  }
+
+  .aliados-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* Newsletter */
+  .newsletter-section {
+    padding: 3rem 1.25rem;
+  }
+
   .newsletter-content {
     grid-template-columns: 1fr;
     gap: 2rem;
+    padding: 2rem 1.5rem;
   }
 
   .newsletter-logo {
@@ -454,7 +491,124 @@
     align-items: center;
   }
 
+  .newsletter-logo img {
+    max-width: 180px;
+  }
+
+  .newsletter-logo h3 {
+    font-size: 1.25rem;
+  }
+
+  .newsletter-form-box h2 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
   .newsletter-submit-btn {
     align-self: center;
+    width: 100%;
+  }
+}
+
+/* Móviles (480px) */
+@media (max-width: 480px) {
+
+  /* Hero */
+  .hero {
+    min-height: 60vh;
+    padding: 2rem 1rem;
+  }
+
+  .hero h1 {
+    font-size: 1.5rem;
+    line-height: 1.4;
+    font-weight: 400;
+  }
+
+  /* Propósito */
+  .proposito {
+    padding: 3rem 1rem;
+  }
+
+  .proposito h2,
+  .noticias-section h2,
+  .aliados h2 {
+    font-size: 1.75rem;
+  }
+
+  .proposito-card {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .proposito-card h3 {
+    font-size: 1.25rem;
+  }
+
+  /* Noticias */
+  .noticias-section {
+    padding: 3rem 1rem;
+  }
+
+  .noticias-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .news-image {
+    height: 200px;
+  }
+
+  /* Aliados */
+  .aliados {
+    padding: 2.5rem 1rem;
+  }
+
+  .aliados-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .partner-logo img {
+    max-width: 100px;
+  }
+
+  /* Newsletter */
+  .newsletter-section {
+    padding: 2.5rem 1rem;
+  }
+
+  .newsletter-content {
+    padding: 1.75rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .newsletter-form .form-row {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .newsletter-form-box h2 {
+    font-size: 1.35rem;
+  }
+}
+
+/* Móviles muy pequeños (360px) */
+@media (max-width: 360px) {
+  .hero h1 {
+    font-size: 1.25rem;
+  }
+
+  .proposito h2,
+  .noticias-section h2,
+  .aliados h2 {
+    font-size: 1.5rem;
+  }
+
+  .aliados-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .newsletter-content {
+    padding: 1.5rem 1rem;
   }
 }
