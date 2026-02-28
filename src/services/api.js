@@ -163,3 +163,4 @@ export const loginUser = async (credentials) => {
 
 // ✅ Agregamos export default de apiClient para importaciones más simples
 export default apiClient;
+

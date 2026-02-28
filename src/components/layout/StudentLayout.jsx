@@ -13,40 +13,41 @@ import {
   CheckCircle2,
   Clock,
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion"; // Ajustado para compatibilidad
 import { getUserById } from "../../services/api";
 
-export function StudentLayout({ children, user, onLogout, setView, currentView }) {
+export function StudentLayout({ children, onLogout, setView, currentView }) {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [userData, setUserData] = useState(null);
 
-  const testUserId = 1; // ← CAMBIA AQUÍ: 7, 8, 9, 1, 2, 3, etc.
+  // 1. OBTENCIÓN DINÁMICA DEL ID DESDE EL LOGIN
+  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const userId = storedUser.idUser || storedUser.id; 
 
-useEffect(() => {
-  const idToUse = testUserId || user?.id;
-  if (!idToUse) return;
+  useEffect(() => {
+    if (!userId) return;
 
-  getUserById(idToUse)
-    .then((data) => {
-      console.log("🚀 DATOS CRUDOS DEL USUARIO (prueba):", data);
-      console.log("ID usado en prueba:", idToUse);
-      setUserData(data);
-    })
-    .catch((err) => {
-      console.error("❌ Error en prueba:", err);
-      setUserData(null);
-    });
-}, []); // ←
+    // Llamada al endpoint real: /users/{idUser}
+    getUserById(userId)
+      .then((data) => {
+        console.log("🚀 DATOS RECIBIDOS DEL BACKEND:", data);
+        setUserData(data);
+      })
+      .catch((err) => {
+        console.error("❌ Error al cargar datos del Layout:", err);
+        setUserData(null);
+      });
+  }, [userId]);
 
-  // Nombre completo - ajustado a camelCase (como devuelve tu API)
-  const displayName = userData
-    ? `${userData.firstName || ""} ${userData.lastName || ""}`.trim() || user?.username || "Estudiante"
-    : user?.username || "Estudiante";
+  // 2. FORMATEO DINÁMICO DEL NOMBRE (Usando tus claves: firstName, lastName)
+  const displayName = userData?.firstName 
+    ? `${userData.firstName} ${userData.lastName || ""}`.trim() 
+    : "Cargando...";
 
-  // Rol fijo para este layout (estudiantes no tienen roles en la respuesta actual)
-  const displayRole = "Estudiante";
+  // 3. DEFINICIÓN DEL ROL (Basado en el rango de IDs de tu base de datos)
+  const displayRole = (userId >= 1 && userId <= 6) ? "Administrador" : "Estudiante";
 
   const menuItems = [
     { id: "dashboard", label: "Mi Dashboard", icon: LayoutDashboard },
@@ -57,8 +58,7 @@ useEffect(() => {
 
   const notifications = [
     { id: 1, title: "Nuevo Proyecto Asignado", time: "Hace 5 min", type: "info", icon: BookOpen },
-    { id: 2, title: "Tarea Calificada: React Avanzado", time: "Hace 2 horas", type: "success", icon: CheckCircle2 },
-    { id: 3, title: "Recordatorio: Sesión de Mentoria", time: "Hoy, 4:00 PM", type: "warning", icon: Clock },
+    { id: 2, title: "Tarea Calificada", time: "Hace 2 horas", type: "success", icon: CheckCircle2 },
   ];
 
   const handleNavClick = (viewId) => {
@@ -69,6 +69,9 @@ useEffect(() => {
   const handleLogout = () => {
     setIsMobileMenuOpen(false);
     setIsLoggingOut(true);
+    // Limpieza de seguridad al salir
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
     setTimeout(() => onLogout(), 2000);
   };
 
@@ -87,28 +90,21 @@ useEffect(() => {
               className="logout-box"
               initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.1 }}
             >
-              <div className="logout-icon">
-                <LogOut size={28} />
-              </div>
+              <div className="logout-icon"><LogOut size={28} /></div>
               <p className="logout-title">Cerrando sesión...</p>
-              <p className="logout-subtitle">Hasta pronto, {displayName.split(" ")[0] || "estudiante"} 👋</p>
-              <div className="logout-spinner">
-                <div className="logout-spinner-bar" />
-              </div>
+              <p className="logout-subtitle">Hasta pronto, {userData?.firstName || "estudiante"} 👋</p>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Navbar */}
       <header className="navbar">
         <div className="navbar-inner">
           <div className="navbar-left">
             <div className="navbar-logo" onClick={() => setView("dashboard")}>
               <span className="navbar-logo-text">
-                <img src="/logo-2.png" alt="SUROTEC" />
+                <img src="/logo-2.png" alt="SUROTEC" style={{ height: '32px' }} />
               </span>
             </div>
 
@@ -129,150 +125,39 @@ useEffect(() => {
           <div className="navbar-right">
             {/* Notificaciones */}
             <div className="notif-wrapper">
-              <button
-                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                className={`notif-btn ${isNotificationsOpen ? "notif-btn--active" : ""}`}
-              >
+              <button onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} className="notif-btn">
                 <Bell size={20} />
                 <span className="notif-badge" />
               </button>
-
-              <AnimatePresence>
-                {isNotificationsOpen && (
-                  <>
-                    <div className="notif-backdrop" onClick={() => setIsNotificationsOpen(false)} />
-                    <motion.div
-                      className="notif-dropdown"
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      transition={{ duration: 0.15 }}
-                    >
-                      <div className="notif-dropdown-header">
-                        <h4 className="notif-dropdown-title">Notificaciones</h4>
-                        <span className="notif-count-badge">3 Nuevas</span>
-                      </div>
-                      <div className="notif-list">
-                        {notifications.map((n) => (
-                          <div key={n.id} className="notif-item">
-                            <div className={`notif-item-icon notif-item-icon--${n.type}`}>
-                              <n.icon size={18} />
-                            </div>
-                            <div className="notif-item-body">
-                              <p className="notif-item-title">{n.title}</p>
-                              <p className="notif-item-time">
-                                <Clock size={11} /> {n.time}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <button className="notif-see-all">Ver todas las notificaciones</button>
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
             </div>
 
             <div className="navbar-divider" />
 
-            {/* Info del usuario */}
+            {/* Info del usuario dinámico */}
             <div className="navbar-user">
               <div className="navbar-user-info">
                 <p className="navbar-user-name">{displayName}</p>
                 <p className="navbar-user-role">{displayRole}</p>
               </div>
               <button className="navbar-avatar" onClick={() => setView("profile")}>
-                <img
-                  src="https://images.unsplash.com/photo-1729824186568-be656d0eecf9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200"
-                  alt="Avatar"
-                />
+                {userData?.firstName ? (
+                  <div className="avatar-placeholder">{userData.firstName.charAt(0)}</div>
+                ) : (
+                  <img src="https://images.unsplash.com/photo-1729824186568-be656d0eecf9?w=100" alt="Avatar" />
+                )}
               </button>
-              <button className="navbar-logout" onClick={handleLogout} title="Cerrar Sesión">
+              <button className="navbar-logout" onClick={handleLogout}>
                 <LogOut size={18} />
               </button>
             </div>
-
-            <button
-              className="mobile-menu-btn"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
           </div>
         </div>
       </header>
 
-      {/* Menú móvil */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            className="mobile-menu"
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ duration: 0.25 }}
-          >
-            <div className="mobile-menu-header">
-              <div className="navbar-logo">
-                <div className="navbar-logo-icon">
-                  <GraduationCap size={22} />
-                </div>
-                <span className="mobile-menu-logo-text">Surotec</span>
-              </div>
-              <button className="mobile-menu-close" onClick={() => setIsMobileMenuOpen(false)}>
-                <X size={24} />
-              </button>
-            </div>
-
-            <nav className="mobile-menu-nav">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.id)}
-                  className={`mobile-menu-nav-btn ${currentView === item.id ? "mobile-menu-nav-btn--active" : ""}`}
-                >
-                  <item.icon size={22} />
-                  <span>{item.label}</span>
-                </button>
-              ))}
-            </nav>
-
-            <div className="mobile-menu-footer">
-              <div className="mobile-menu-user">
-                <div className="mobile-menu-avatar">
-                  <img
-                    src="https://images.unsplash.com/photo-1729824186568-be656d0eecf9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200"
-                    alt="Avatar"
-                  />
-                </div>
-                <div>
-                  <p className="mobile-menu-user-name">{displayName}</p>
-                  <p className="mobile-menu-user-id">@{userData?.username ?? user?.username ?? "estudiante"}</p>
-                </div>
-              </div>
-              <button className="mobile-menu-logout" onClick={handleLogout}>
-                <LogOut size={22} />
-                <span>Cerrar Sesión</span>
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Contenido principal */}
       <main className="layout-main">
-        <motion.div
-          key={currentView}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {children}
-        </motion.div>
+        {children}
       </main>
 
-      {/* Footer */}
       <footer className="layout-footer">
         <p className="layout-footer-text">© 2026 Surotec. Todos los derechos reservados.</p>
       </footer>
