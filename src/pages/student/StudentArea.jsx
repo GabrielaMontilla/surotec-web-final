@@ -5,6 +5,7 @@ import StudentDashboard from "./StudentDashboard";
 import StudentProjects from "./StudentProjects";
 import StudentNews from "./StudentNews";
 import { getUserById } from "../../services/api";
+import MiPerfilStudents from "./MiPerfilStudents";
 
 const USER_ID = 7;
 
@@ -83,19 +84,15 @@ export default function StudentArea() {
   const renderView = () => {
     switch (currentView) {
       case "dashboard":
-        return (
-          <StudentDashboard userId={USER_ID} onNavigate={changeView} />
-        );
+        return <StudentDashboard userId={USER_ID} onNavigate={changeView} />;
       case "projects":
         return <StudentProjects />;
       case "news":
         return <StudentNews />;
       case "profile":
-        return <PlaceholderView title="Mi Perfil" />;
+        return <MiPerfilStudents />;
       default:
-        return (
-          <StudentDashboard userId={USER_ID} onNavigate={changeView} />
-        );
+        return <StudentDashboard userId={USER_ID} onNavigate={changeView} />;
     }
   };
 

@@ -19,6 +19,8 @@ import Employees from "../pages/admin/Employees";
 
 // --- STUDENT ---
 import StudentArea from "../pages/student/StudentArea";
+import MiPerfilStudents from "../pages/student/MiPerfilStudents";
+import MiPerfilAdmin from "../pages/admin/MiPerfilAdmin";
 
 export function AppRoutes() {
   return (
@@ -39,10 +41,12 @@ export function AppRoutes() {
       <Route path="/admin/users" element={<Users />} />
       <Route path="/admin/students" element={<Students />} />
       <Route path="/admin/employees" element={<Employees />} />
+      <Route path="/admin/perfil" element={<MiPerfilAdmin />} />
 
       {/* RUTAS PRIVADAS - STUDENT */}
       <Route path="/student/dashboard" element={<StudentArea />} />
       <Route path="/student-dashboard" element={<StudentArea />} />
+      <Route path="/student/perfil" element={<MiPerfilStudents />} />
 
       {/* RUTA 404 */}
       <Route path="*" element={<h1>404 - Página no encontrada</h1>} />

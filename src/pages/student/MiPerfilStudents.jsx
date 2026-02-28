@@ -72,7 +72,7 @@ const MiPerfilStudents = () => {
           correo: email,
           bio:
             dbData.bio ||
-            "Apasionado por el desarrollo web y el diseño de interfaces. Actualmente aprendiendo React y Node.js.",
+            "Apasionada por el desarrollo web y el diseño de interfaces. Actualmente aprendiendo React y Node.js.",
           github: dbData.githubUrl || dbData.github || "github.com/",
           linkedin: dbData.linkedinUrl || dbData.linkedin || "linkedin.com/in/",
         });
