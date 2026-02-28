@@ -26,15 +26,27 @@ const InputField = ({
         {icon && <span className="input-icon">{icon}</span>}
 
 
-        <input
-          type={type}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          name={name}
-          // Si hay ícono, le pone una clase extra para hacerle espacio
-          className={icon ? "with-icon" : "standard-input"}
-        />
+        {/* AQUÍ ESTÁ LA MAGIA: Si el tipo es textarea, pinta una caja grande, si no, el input normal */}
+        {type === "textarea" ? (
+          <textarea
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            name={name}
+            rows="4" /* Para que tenga buena altura */
+            className={icon ? "with-icon" : "standard-input"}
+          />
+        ) : (
+          <input
+            type={type}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            name={name}
+            // Si hay ícono, le pone una clase extra para hacerle espacio
+            className={icon ? "with-icon" : "standard-input"}
+          />
+        )}
       </div>
     </div>
   );
@@ -42,3 +54,6 @@ const InputField = ({
 
 
 export default InputField;
+
+
+
