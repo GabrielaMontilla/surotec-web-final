@@ -101,7 +101,8 @@ function ErrorCard({ message }) {
   );
 }
 
-const USER_ID = 1;
+const user = JSON.parse(localStorage.getItem("user") || "{}");
+const USER_ID = user.id;
 
 // ↓ Recibe onNavigate para poder cambiar de vista desde el dashboard
 export default function StudentDashboard({ onNavigate }) {
