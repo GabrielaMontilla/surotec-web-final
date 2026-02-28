@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import AuthCard from "../components/layout/AuthCard"; // Ajusta la ruta si es necesario
-import InputField from "../components/ui/InputField"; // Ajusta la ruta si es necesario
-import Button from "../components/ui/Button"; // Ajusta la ruta si es necesario
-import { apiClient, endpoints } from "../services/api"; // <-- Importando tu configuración de API
+import AuthCard from "../components/layout/AuthCard"; 
+import InputField from "../components/ui/InputField"; 
+import Button from "../components/ui/Button"; 
+import { apiClient, endpoints } from "../services/api"; 
 import "./Login.css";
 
 const Login = () => {
@@ -20,54 +20,56 @@ const Login = () => {
       ...form,
       [e.target.name]: e.target.value,
     });
-    // Limpiamos el error si el usuario empieza a escribir
     if (errorMsg) setErrorMsg("");
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación de campos vacíos
     if (!form.username || !form.password) {
       setErrorMsg("Por favor, completa todos los campos.");
       return;
     }
 
     try {
-      // Usamos tu apiClient y el endpoint de login
       const response = await apiClient.post(endpoints.users.login, form);
       const userData = response.data;
 
-      // Guardamos el token para el interceptor y la data del usuario
+      // 1. Guardar la sesión
       if (userData.token) {
         localStorage.setItem("token", userData.token);
       }
       localStorage.setItem("user", JSON.stringify(userData));
 
-      // REDIRECCIÓN SEGÚN EL ROL
-      // Ojo: Ajusta 'userData.role' por el nombre exacto que te envíe tu backend (ej. userData.rol, userData.tipo)
-      // Ajusta "ADMIN" y "STUDENT" a los valores exactos de tu base de datos
-      if (userData.role === "ADMIN" || userData.role === "ROLE_ADMIN") {
+      // --- DIAGNÓSTICO EN TIEMPO REAL ---
+      // Esto te mostrará una ventana emergente con lo que el backend devolvió
+      console.log("Datos del usuario:", userData);
+      
+      // 2. Extraer ID y Rol con nombres alternativos (por si el backend usa CamelCase)
+      const userId = parseInt(userData.id || userData.idUser || 0);
+      const rawRoles = (userData.role || userData.roles || "").toString().toUpperCase();
+
+      // 3. TRIPLE VALIDACIÓN PARA REDIRECCIÓN
+      // Se irá a ADMIN si: Su ID es del 1 al 6 O si el backend dice que es ADMIN
+      const isEmployee = (userId >= 1 && userId <= 6);
+      const hasAdminRole = rawRoles.includes("ADMIN");
+
+      if (isEmployee || hasAdminRole) {
+        alert(`ID detectado: ${userId} - Redirigiendo a ADMIN`);
         navigate("/admin/dashboard");
-      } else if (
-        userData.role === "STUDENT" ||
-        userData.role === "ROLE_STUDENT"
-      ) {
-        navigate("/student/dashboard");
       } else {
-        // Por si no trae rol o es diferente
-        navigate("/student/dashboard"); // Valor por defecto temporal
+        alert(`ID detectado: ${userId} - Redirigiendo a STUDENT`);
+        navigate("/student/dashboard");
       }
+
     } catch (error) {
-      console.log("Error en login:", error.response?.data || error.message);
-      setErrorMsg("Credenciales incorrectas. Intenta de nuevo.");
+      console.error("Error en login:", error);
+      setErrorMsg("Error de credenciales o servidor.");
     }
   };
-
   return (
     <div className="auth-container">
       <AuthCard>
-        {/* Sección del Logo y Títulos */}
         <div className="logo-section">
           <div className="logo-box">
             <svg
@@ -90,9 +92,9 @@ const Login = () => {
 
         <form onSubmit={handleSubmit}>
           <InputField
-            label="Correo Electrónico"
+            label="Usuario o Correo"
             name="username"
-            placeholder="admin@test.com"
+            placeholder="gmontilla / jperez"
             value={form.username}
             onChange={handleChange}
             icon={
@@ -104,8 +106,8 @@ const Login = () => {
                 stroke="#9ca3af"
                 strokeWidth="2"
               >
-                <rect x="2" y="4" width="20" height="16" rx="2" />
-                <path d="M2 4l10 8 10-8" />
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
               </svg>
             }
           />
@@ -137,13 +139,11 @@ const Login = () => {
             }
           />
 
-          {/* Renderizado condicional del error */}
           {errorMsg && <div className="error-alert">{errorMsg}</div>}
 
           <Button type="submit">Iniciar Sesión</Button>
         </form>
 
-        {/* Footer de la tarjeta */}
         <div className="auth-footer">
           <span>¿Problemas para acceder?</span>{" "}
           <Link to="/recuperar" className="link-text bold">
