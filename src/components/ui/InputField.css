@@ -5,7 +5,6 @@
   width: 100%;
 }
 
-
 .label-row {
   display: flex;
   justify-content: space-between;
@@ -13,13 +12,11 @@
   margin-bottom: 8px;
 }
 
-
 .input-group label {
   font-size: 13px;
   font-weight: 600;
   color: #374151;
 }
-
 
 .input-wrapper {
   position: relative;
@@ -28,7 +25,6 @@
   width: 100%;
 }
 
-
 .input-icon {
   position: absolute;
   left: 12px;
@@ -36,7 +32,6 @@
   align-items: center;
   pointer-events: none; /* Evita que el ícono bloquee el clic en el input */
 }
-
 
 /* Estilos base del input */
 .input-group input {
@@ -54,16 +49,36 @@
     box-shadow 0.2s;
 }
 
-
 .input-group input:focus {
   border-color: #0aa387; /* Verde principal de Surotec */
   box-shadow: 0 0 0 3px rgba(10, 163, 135, 0.1); /* Resplandor suave al hacer foco */
 }
-
 
 /* Si el input tiene un ícono por dentro, le damos más padding a la izquierda */
 .input-group input.with-icon {
   padding-left: 40px;
 }
 
+/* Estilos para que el textarea se vea igual que los inputs normales */
+.input-wrapper textarea.standard-input,
+.input-wrapper textarea.with-icon {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  color: #374151;
+  box-sizing: border-box;
+  outline: none;
+  background-color: white;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  resize: vertical; /* Permite estirarlo hacia abajo */
+  font-family: inherit;
+}
 
+.input-wrapper textarea:focus {
+  border-color: #0aa387; /* El verde Surotec */
+  box-shadow: 0 0 0 3px rgba(10, 163, 135, 0.1);
+}

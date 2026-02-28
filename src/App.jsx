@@ -27,6 +27,7 @@ import { StudentLayout } from "./components/layout/StudentLayout";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentProjects from "./pages/student/StudentProjects";
 import StudentNews from "./pages/student/StudentNews";
+import MiPerfilStudents from "./pages/student/MiPerfilStudents";
 import { getUserById } from "./services/api";
 
 import "./App.css";
@@ -89,7 +90,7 @@ function StudentArea() {
       case "news":
         return <StudentNews />;
       case "profile":
-        return <PlaceholderView title="Mi Perfil" />; // Dejamos el placeholder de Gabriela para que Lorena lo cambie luego
+        return <MiPerfilStudents /> // Dejamos el placeholder de Gabriela para que Lorena lo cambie luego
       default:
         return (
           <StudentDashboard userId={USER_ID} onNavigate={setCurrentView} />
